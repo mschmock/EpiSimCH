@@ -174,5 +174,11 @@ public class MyUtilities {
         JOptionPane.showMessageDialog(null, text1, text2, JOptionPane.WARNING_MESSAGE);
     }
     
+    // YES - NO Dialog
+    public static int getYesNoDialog(String txt, String title ) {
+        //default icon, custom title
+        return JOptionPane.showConfirmDialog(
+            null, txt, title, JOptionPane.YES_NO_OPTION); 
+    }
     
 }

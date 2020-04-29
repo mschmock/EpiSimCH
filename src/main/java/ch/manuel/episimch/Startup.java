@@ -6,6 +6,12 @@ package ch.manuel.episimch;
 import ch.manuel.graphics.InfoDialog;
 import ch.manuel.graphics.MainFrame;
 import ch.manuel.utilities.MyUtilities;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 // Main Class
@@ -20,6 +26,10 @@ public class Startup extends Thread {
         
         // Set Look and Feel
         MyUtilities.setLaF("Windows");
+        
+        // check available memory
+        MyUtilities.getErrorMsg("xmx", "Size: " + Runtime.getRuntime().maxMemory() );
+        Startup.checkMemory();
         
         // open InfoPanel
         Startup.dialog = new InfoDialog(new javax.swing.JFrame(), true);
@@ -62,5 +72,58 @@ public class Startup extends Thread {
         t2.start();
     }
     
+    // Check available memory of heap
+    private static void checkMemory() {
+        long maxMem = Runtime.getRuntime().maxMemory();
+        double maxGB =  maxMem / 1000000000.0;
+        boolean hasError = false;
+        
+        // needed memory: > 4gb
+        if( maxGB < 5.0 ) {
+            int ans = MyUtilities.getYesNoDialog("It seems that your memory size is limited to 4GB.\n "
+                                               + "8GB are recommanded to run the simulation.\n"
+                                               + "Try to restart application with 8GB heap size?", "Heap Size");
+            if( ans == javax.swing.JOptionPane.YES_OPTION ) {
+                
+                System.out.println("Try to restart application");
+                try {
+                    // try restart with Xmx8g
+                    Startup.restartApplication();
+                } catch (URISyntaxException ex) {
+                    System.out.println( "Error:\t" + ex.toString() );
+                    hasError = true;
+                } catch (IOException ex) {
+                    System.out.println( "Error:\t" + ex.toString() );
+                    hasError = true;
+                }
+            }
+            // show error msg
+            if( hasError ) {
+                MyUtilities.getErrorMsg( "Error", "Error reloading application with heap size of 8GB");
+            }
+        }
+    }
+    
+    // Try restart
+    private static void restartApplication() throws URISyntaxException, IOException {
+        final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+        final File currentJar = new File(Startup.class.getProtectionDomain().getCodeSource().getLocation().toURI() );
+
+        // is it a jar file?
+        if(!currentJar.getName().endsWith(".jar"))
+            return;
+
+        // Build command: java -jar application.jar
+        final ArrayList<String> command = new ArrayList<>();
+        command.add(javaBin);
+        command.add("-Xmx8g");
+        command.add("-jar");
+        command.add(currentJar.getPath());
+        
+        final ProcessBuilder builder = new ProcessBuilder(command);
+        builder.start();
+        System.out.println("Exit application");
+        System.exit(0);
+    }
         
 }
