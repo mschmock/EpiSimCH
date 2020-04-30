@@ -35,10 +35,9 @@ public class Calculation implements Runnable {
     // Gesamtdaten Infektion
     private static int dailyInfections;
     private static int sumInfections;
-    private static int sumImmune;
-    private static int sumDeath;
-    private static int meanR0;
-    private static int countR0;
+    private static int dailyImmunes;
+    private static int dailyDeath;
+    private static int nbTransmitions;
     
     // thread control
     private static volatile boolean exit = false;
@@ -269,10 +268,9 @@ public class Calculation implements Runnable {
         // reset counter for sums
         Calculation.dailyInfections = 0;
         Calculation.sumInfections = 0;
-        Calculation.sumDeath = 0;
-        Calculation.sumImmune = 0;
-        Calculation.meanR0 = 0;
-        Calculation.countR0 = 0;
+        Calculation.dailyDeath = 0;
+        Calculation.dailyImmunes = 0;
+        Calculation.nbTransmitions = 0;
         
         // var for max data
         int maxDeath = 0;
@@ -317,10 +315,9 @@ public class Calculation implements Runnable {
                     countR0++;
                     // count only for today (act day)
                     if( actInfec.getDayEndOfInfection() == day ) {
-                        Calculation.sumImmune++;
-                        // KO
-                        Calculation.meanR0 += actInfec.getNbTransmR0();
-                        Calculation.countR0++;
+                        Calculation.dailyImmunes++;
+                        // nb transmitions for specific day
+                        Calculation.nbTransmitions += actInfec.getNbTransmR0();
                     }
                 }
                 // count death
@@ -329,7 +326,7 @@ public class Calculation implements Runnable {
                     nbDeath++;
                     // count only for today (act day)
                     if( actInfec.getDayEndOfInfection() == day ) {
-                        Calculation.sumDeath++;
+                        Calculation.dailyDeath++;
                     }
                 }
             }
@@ -356,12 +353,10 @@ public class Calculation implements Runnable {
             if( maxRel > maxInfectedRel ) { maxInfectedRel = maxRel; }
         }
         // set daily data
-        Infection.setDailyInfections( Calculation.dailyInfections );
-        Infection.setResInfection(day, Calculation.sumInfections );
-        Infection.setResImmues( day, Calculation.sumImmune );
-        Infection.setResDeath( day, Calculation.sumDeath );
-        Infection.setResR0Transm(day, Calculation.meanR0 );
-        Infection.setResR0Count(day, Calculation.countR0 );
+        Infection.setInfectPerDay(day, Calculation.dailyInfections );
+        Infection.setImmunesPerDay(day, Calculation.dailyImmunes );
+        Infection.setDeathPerDay(day, Calculation.dailyDeath );
+        Infection.setTransmPerDay(day, Calculation.nbTransmitions );
         // set max data
         Municipality.setMaxInfections( maxInfected );
         Municipality.setMaxImmune( maxImmune );
@@ -374,23 +369,21 @@ public class Calculation implements Runnable {
     private static void updateChart() {
         int d = Calculation.day;
 
-        int sumDeath = Infection.getSumDeath();
-        int sumImu = Infection.getSumImmunes();
-        int x11 = sumInfections;
-        int x12 = sumDeath;
-        int x13 = sumImu;
+        int x11 = Calculation.sumInfections;
+        int x12 = Infection.getSumDeath();
+        int x13 = Infection.getSumImmunes();
         // subplot 1
         XY_Chart.addInfection(d, x11);
         XY_Chart.addDeath(d, x12);
         XY_Chart.addImmune(d, x13);
 
         // daily cases
-        int x21 = Infection.getDailyInfections();
+        int x21 = Infection.getDailyInfected( d );
         int x22 = Infection.getDailyDeath( d );
         // subplot 2
         XY_Chart.addDailyInf(d, x21);
         XY_Chart.addDailyDeath(d, x22);
-        
+
         // R0 + Incr. rate
         float x31 = Infection.getMeanR0();
         float x32 = Infection.get7DayR0( d );

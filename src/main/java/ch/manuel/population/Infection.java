@@ -17,18 +17,14 @@ public class Infection {
     private boolean isImmune;
     private boolean willRecover;
     private static int daysToTransmition;       // Anzahl Tage bis eine Übertragung möglich wird
-    
-    // K0
-    private int nbTransmK0;
-    // Results
-    private static int nbDailyInfections;
+    private int nbTransmR0;                     // nb transmition for this person 
+
     // Results: daily datas
-    private static int[] resInfections;
-    private static int[] resImmunes;
-    private static int[] resDeath;
-    private static int[] resK0Transm;
-    private static int[] resK0Pers;
-    
+    private static int[] infectionPerDay;
+    private static int[] ImmunesPerDay;
+    private static int[] DeathPerDay;
+    private static int[] TransmPerDay;
+   
             
     // Constructor
     public Infection( Person pers ) {
@@ -37,7 +33,7 @@ public class Infection {
         this.isInfected = false;
         this.isImmune = false;
         this.willRecover = true;
-        this.nbTransmK0 = 0;
+        this.nbTransmR0 = 0;
     }
     
     
@@ -63,11 +59,10 @@ public class Infection {
         }
     }
     public static void initArray(int size) {
-        resInfections = new int[size];
-        resImmunes = new int[size];
-        resDeath = new int[size];
-        resK0Transm = new int[size];
-        resK0Pers = new int[size];
+        infectionPerDay = new int[size];
+        ImmunesPerDay = new int[size];
+        DeathPerDay = new int[size];
+        TransmPerDay = new int[size];
     }
     
     // setter
@@ -99,25 +94,20 @@ public class Infection {
         Infection.daysToTransmition = days;
     }
     public void transmitionSuccessful() {
-        this.nbTransmK0++;
+        this.nbTransmR0++;
     }
-    public static void setResInfection( int day, int nb ) {
-        Infection.resInfections[day] = nb;
+    // SET DAILY DATA
+    public static void setInfectPerDay( int day, int nb ) {
+        Infection.infectionPerDay[day] = nb;
     }
-    public static void setResImmues( int day, int nb ) {
-        Infection.resImmunes[day] = nb;
+    public static void setImmunesPerDay( int day, int nb ) {
+        Infection.ImmunesPerDay[day] = nb;
     }
-    public static void setResDeath( int day, int nb ) {
-        Infection.resDeath[day] = nb;
+    public static void setDeathPerDay( int day, int nb ) {
+        Infection.DeathPerDay[day] = nb;
     }
-    public static void setResR0Transm( int day, int k0 ) {
-        Infection.resK0Transm[day] = k0;
-    }
-    public static void setResR0Count( int day, int k0 ) {
-        Infection.resK0Pers[day] = k0;
-    }
-    public static void setDailyInfections( int nb ) {
-        Infection.nbDailyInfections = nb;
+    public static void setTransmPerDay( int day, int k0 ) {
+        Infection.TransmPerDay[day] = k0;
     }
     
     // getter
@@ -140,7 +130,7 @@ public class Infection {
         return this.isImmune;
     }
     public int getNbTransmR0() {
-        return this.nbTransmK0;
+        return this.nbTransmR0;
     }
     public int getDayOfInfection() {
         return this.dayOfInfection;
@@ -148,33 +138,37 @@ public class Infection {
     public int getDayEndOfInfection() {
         return this.dayEndOfInfection;
     }
-    public static int getDailyInfections() {
-        return Infection.nbDailyInfections;
-    }
+    // GET DAILY DATA
     public static int getDailyDeath( int d ) {
         if( d < 0 ) { return 0; }
-        return  resDeath[d];
+        return  DeathPerDay[d];
+    }
+    public static int getDailyInfected( int d ) {
+        if( d < 0 ) { return 0; }
+        return infectionPerDay[d];
     }
     public static int getSumImmunes() {
         int sum = 0;
-        for( int i = 0; i < resImmunes.length; i++ ) {
-            sum += resImmunes[i];
+        for( int i = 0; i < ImmunesPerDay.length; i++ ) {
+            sum += ImmunesPerDay[i];
         }
         return sum;
     }
     public static int getSumDeath() {
         int sum = 0;
-        for( int i = 0; i < resDeath.length; i++ ) {
-            sum += resDeath[i];
+        for( int i = 0; i < DeathPerDay.length; i++ ) {
+            sum += DeathPerDay[i];
         }
         return sum;
     }
     public static float getMeanR0() {
+        // don't count first day -> Immunes from startup (initial parameter)
+        // thouse immunes do not have any transmitions
         int sum1 = 0;
         int sum2 = 0;
-        for( int i = 0; i < resK0Transm.length; i++ ) {
-            sum1 += resK0Transm[i];
-            sum2 += resK0Pers[i];
+        for( int i = 1; i < TransmPerDay.length; i++ ) {
+            sum1 += TransmPerDay[i];
+            sum2 += ImmunesPerDay[i];
         }
         if( sum2 == 0 ) {
             return 0f;
@@ -190,8 +184,8 @@ public class Infection {
             return 0f;
         } else {
             for( int i = (day-7); i < day; i++ ) {
-                sum1 += resK0Transm[i];
-                sum2 += resK0Pers[i];
+                sum1 += TransmPerDay[i];
+                sum2 += ImmunesPerDay[i];
             }
             if( sum2 == 0 ) {
                 return 0f;
@@ -202,8 +196,8 @@ public class Infection {
     }
     public static float getIncrRate( int d ) {
         if( d < 2 ) { return 0; }
-        int val1 = resInfections[d-1];
-        int val2 = resInfections[d];
+        int val1 = infectionPerDay[d-1];
+        int val2 = infectionPerDay[d];
         
         if( val1 == 0 ) { 
             return 1f; 
@@ -218,6 +212,6 @@ public class Infection {
         this.isInfected = false;
         this.isImmune = false;
         this.willRecover = true;
-        this.nbTransmK0 = 0;
+        this.nbTransmR0 = 0;
     }
 }
