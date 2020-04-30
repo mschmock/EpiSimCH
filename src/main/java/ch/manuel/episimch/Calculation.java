@@ -136,29 +136,59 @@ public class Calculation implements Runnable {
             }
         }
         // 2. RANDOM INFECTIONS + IMMUNES
-        // create list with population
-        List<Integer>listPers = new ArrayList<>(); 
-        for( int i = 0; i < nb; i++ ) {
-            listPers.add( i );  
-        }
         Random rand = new Random();
         
         double probInf = (double) nbInfectionsStart / nb;       // probability of infection
         double probImm = (double) nbImmunesStart / nb;          // probability of immunisation
+        // counter
+        int nbInf = 0;
+        int nbImm = 0;
+        // limit reached?
+        boolean fillUpInf = true;
+        boolean fillUpImm = true;
         // probInf + probImm =< 1.0
         for( int i = 0; i < nb; i++ ) {
             
             double probab = rand.nextDouble();
             // 2.1 INFECTIONS
-            if( probab < probInf ) {
+            if( (probab < probInf) && fillUpInf ) {
                 Population.getPerson( i ).getInfection().setIsInfected( 0 );
+                nbInf++;
+                fillUpInf = nbInf < nbInfectionsStart ? true : false;
             }
             // 2.2 IMMUNES
-            if( (1-probImm) < probab ) {
-                Population.getPerson( i ).getInfection().setIsInfected( 0 );
-                Population.getPerson( i ).getInfection().setDaysToRecovery( 0 );
-                Population.getPerson( i ).resetLife();
+            if( ((1-probImm) < probab) && fillUpImm ) {
+                Population.getPerson( i ).getInfection().setIsImmune();
+                nbImm++;
+                fillUpImm = nbImm < nbImmunesStart ? true : false;
             }   
+        }
+        
+        // 3. CORRECTION
+        // if limit not reached
+        List<Integer>listPers = new ArrayList<>();
+        // create list with persons (without infection)
+        for( int i = 0; i < nb; i++ ) {
+            Person pers = Population.getPerson( i );
+            if( !pers.getInfection().isInfected() ) {
+                listPers.add(i);
+            }
+        }
+        // add infections
+        for( int i = 0; i < (nbInfectionsStart-nbInf); i++ ) {
+            int nbPers = listPers.size();
+            int ind = listPers.get( rand.nextInt(nbPers) );
+            // set infections
+            Population.getPerson( ind ).getInfection().setIsInfected( 0 );
+            listPers.remove( ind );
+        }
+        // add immunes
+        for( int i = 0; i < (nbImmunesStart-nbImm); i++ ) {
+            int nbPers = listPers.size();
+            int ind = listPers.get( rand.nextInt(nbPers) );
+            // set immunes
+            Population.getPerson( i ).getInfection().setIsImmune();
+            listPers.remove( ind );
         }
     }
     
@@ -168,7 +198,6 @@ public class Calculation implements Runnable {
         Random randTrans = new Random();
         Random randCont = new Random();
         
-        int dailyInfections = 0;
         // iterate through population
         for (int i = 0; i < nb; i++) {
             // actual Person to test
@@ -192,9 +221,7 @@ public class Calculation implements Runnable {
                         if( tmpPers.getInfection().setIsInfected( day ) ) {
                             // add new infection to counter R0
                             actPers.getInfection().transmitionSuccessful();
-                            dailyInfections++;
                         }
-                        
                     }
                 }
                 
@@ -219,15 +246,11 @@ public class Calculation implements Runnable {
                         if( tmpPers.getInfection().setIsInfected( day ) ) {
                             // add new infection to counter R0
                             actPers.getInfection().transmitionSuccessful();
-                            dailyInfections++;
                         }
                     }
                 }
             }
         }
-        // daily infection for day n
-        Infection.setDailyInfections( dailyInfections );
-        //System.out.println("Inf: " + dailyInfections);
     }
     
     // update infection
@@ -333,7 +356,8 @@ public class Calculation implements Runnable {
             if( maxRel > maxInfectedRel ) { maxInfectedRel = maxRel; }
         }
         // set daily data
-        Infection.setResInfection(day, Calculation.dailyInfections );
+        Infection.setDailyInfections( Calculation.dailyInfections );
+        Infection.setResInfection(day, Calculation.sumInfections );
         Infection.setResImmues( day, Calculation.sumImmune );
         Infection.setResDeath( day, Calculation.sumDeath );
         Infection.setResR0Transm(day, Calculation.meanR0 );
@@ -349,11 +373,9 @@ public class Calculation implements Runnable {
     // update chart
     private static void updateChart() {
         int d = Calculation.day;
-        // log scale: 0 not allowed
-        int sumInf = Infection.getSumInfections( d );
+
         int sumDeath = Infection.getSumDeath();
         int sumImu = Infection.getSumImmunes();
-        //int x11 = (sumInf-sumImu-sumDeath);
         int x11 = sumInfections;
         int x12 = sumDeath;
         int x13 = sumImu;

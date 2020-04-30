@@ -10,8 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 // Main Class
@@ -28,7 +26,6 @@ public class Startup extends Thread {
         MyUtilities.setLaF("Windows");
         
         // check available memory
-        MyUtilities.getErrorMsg("xmx", "Size: " + Runtime.getRuntime().maxMemory() );
         Startup.checkMemory();
         
         // open InfoPanel
@@ -122,7 +119,6 @@ public class Startup extends Thread {
         
         final ProcessBuilder builder = new ProcessBuilder(command);
         builder.start();
-        System.out.println("Exit application");
         System.exit(0);
     }
         

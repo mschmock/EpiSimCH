@@ -23,7 +23,9 @@ public class InfoDialog extends javax.swing.JDialog implements Runnable {
         super(parent, modal);
         initComponents();
         // inital text:
-        jTextArea1.setText( "Starting EpiSimCH...\n" );
+        long maxMem = Runtime.getRuntime().maxMemory() / (1024*1024);
+        jTextArea1.setText( "Starting EpiSimCH...\n" +
+                            "Available heap size: " + maxMem + " MB\n");
         // OK button not clickable
         jButton2.setEnabled(false);
         // startup ok

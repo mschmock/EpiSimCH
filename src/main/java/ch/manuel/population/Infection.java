@@ -92,6 +92,9 @@ public class Infection {
     public void setNoRecovery() {
         this.willRecover = false;
     }
+    public void setIsImmune() {
+        this.isImmune = true;
+    }
     public static void setDaysToTransmition( int days ) {
         Infection.daysToTransmition = days;
     }
@@ -100,7 +103,6 @@ public class Infection {
     }
     public static void setResInfection( int day, int nb ) {
         Infection.resInfections[day] = nb;
-        //System.out.println("Inf: " + nb);
     }
     public static void setResImmues( int day, int nb ) {
         Infection.resImmunes[day] = nb;
@@ -152,15 +154,6 @@ public class Infection {
     public static int getDailyDeath( int d ) {
         if( d < 0 ) { return 0; }
         return  resDeath[d];
-    }
-    public static int getSumInfections( int d ) {
-        int sum1 = 0;
-        if( d < 0 ) { return 0; }
-        int maxI = d < resInfections.length ? d : resInfections.length;
-        for( int i = 0; i < maxI; i++ ) {
-            sum1 += resInfections[i];
-        }
-        return sum1;
     }
     public static int getSumImmunes() {
         int sum = 0;
