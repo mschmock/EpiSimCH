@@ -137,7 +137,6 @@ public class PolygonPanel extends JPanel {
         tx.concatenate(mirr_y);
         tx.concatenate(scale);
         tx.concatenate(trans);
-        //System.out.println("wd: " + wd + ", hg: " + hg + " X: " + geoData.getBoundX() + " Y: " + geoData.getBoundY());
     }
     
     
@@ -175,15 +174,16 @@ public class PolygonPanel extends JPanel {
             int max = 0;
             for ( int i = 0; i < connPerMunicip.length; i++ ) {
                 if( max < connPerMunicip[i] ) { max = connPerMunicip[i]; }
-                // set max legend + color
-                legend.setMaxVal(max);
             }
+            // prepare legend
+            legend.setMaxVal(max);      // max value
+            legend.setLogScale(true);   // logarithmic scale
             
             // FILL: loop through municipalities
             for (int i = 0; i < GeoData.getNbMunicip(); i++) {
                 // don't draw if no connextion
                 if( connPerMunicip[i] > 1 ) {
-                    // choose color
+                    // choose color from legend
                     col = legend.colorFactory( connPerMunicip[i] );
                     // fill polygon
                     fillMunicip( g2, i, col );
