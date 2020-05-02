@@ -6,16 +6,18 @@ package ch.manuel.graphics;
 import ch.manuel.episimch.DataLoader;
 import ch.manuel.geodata.GeoData;
 import ch.manuel.geodata.Municipality;
-import ch.manuel.population.Person;
 import ch.manuel.population.Population;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,15 +28,15 @@ import javax.swing.JPanel;
 public class DrawPolygon extends JPanel {
 
     // access to geodata
-    private GeoData geoData;
+    private static GeoData geoData;
     
     // list polygons
     private static List<Polygon> listPoly; 
     
     // transformation
     private final AffineTransform tx;
-    private static final int pxBORDER = 16;    // border in pixel
-    private static Map<Integer,Municipality> mapID;             // map with id 
+    private static final int pxBORDER = 16;                     // border in pixel
+    private static Map<Integer,Municipality> mapID;             // map with id of municipalities
     
     // network
     private static Municipality selectedMunicip;
@@ -53,7 +55,7 @@ public class DrawPolygon extends JPanel {
         mapID = new HashMap<Integer,Municipality>();
         
         // get polygons from geoData
-        this.geoData = DataLoader.geoData; 
+        DrawPolygon.geoData = DataLoader.geoData; 
         initPolygons();
         
         // init transformation
@@ -61,12 +63,12 @@ public class DrawPolygon extends JPanel {
 
     }
     
-    // initalisation of polygons
+    // initalisation of polygons (border municipalites)
     private void initPolygons() {
         if( geoData != null ) {
-            for (int i = 0; i < geoData.getNbMunicip(); i++) {
-                List<int[]> listPolyX = geoData.getMunicip(i).getPolyX();
-                List<int[]> listPolyY = geoData.getMunicip(i).getPolyY();
+            for (int i = 0; i < GeoData.getNbMunicip(); i++) {
+                List<int[]> listPolyX = GeoData.getMunicip(i).getPolyX();
+                List<int[]> listPolyY = GeoData.getMunicip(i).getPolyY();
                 int nb = listPolyX.size();
 
                 for (int j = 0; j < nb; j++) {
@@ -75,7 +77,7 @@ public class DrawPolygon extends JPanel {
                                                 listPolyX.get(j).length )
                     );
                     // create map with municipalities
-                    mapID.put( listPoly.size()-1, geoData.getMunicip(i) );
+                    mapID.put( listPoly.size()-1, GeoData.getMunicip(i) );
                 }
 
             }
@@ -85,6 +87,7 @@ public class DrawPolygon extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
         
         if( geoData != null ) {
             // define transformation
@@ -92,17 +95,17 @@ public class DrawPolygon extends JPanel {
             // draw polygons based on selection
             switch( MainFrame.getPlotIndex() ) {
                 case 0:
-                    drawNetwork(g);
+                    drawNetwork( g2 );
                     break;
                 case 1:
-                    drawInfections(g);
+                    drawInfections( g2);
                     break;
                 case 2:
-                    drawK0(g);
+                    drawK0( g2);
                     break;
                 default:
-                    drawBorder((Graphics2D) g);
-            }
+                    drawBorder( g2 );
+            } 
         }
     }
     
@@ -145,8 +148,7 @@ public class DrawPolygon extends JPanel {
         }  
     }
     
-    private void drawNetwork(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
+    private void drawNetwork(Graphics2D g2) {
         
         Color col;
         // Filling for selected municip.
@@ -161,20 +163,9 @@ public class DrawPolygon extends JPanel {
         // draw connextions
         if( Population.getNetworkIsCreated() && (DrawPolygon.selectedMunicip != null) ) {
             int index = DrawPolygon.selectedMunicip.getIndex();
-            int[] arrInhabit = DataLoader.geoData.getMunicip( index ).getArrListPers();
             
             // array with connection per municipality
-            int[] connPerMunicip = new int[ DataLoader.geoData.getNbMunicip() ];
-            // loop through inhabitants
-            for (int i = 0; i < arrInhabit.length; i++ ) {
-                Person pers = Population.getPerson( arrInhabit[i] );
-                
-                // loop through connections
-                for ( int j = 0; j < pers.getListNetwork().size(); j++) {
-                    int ind = Population.getPerson( pers.getListNetwork().get(j) ).getIndexMunicip();
-                    connPerMunicip[ind]++;
-                }
-            }
+            int[] connPerMunicip = GeoData.getConnPerMunicip( index );
             
             // get max value
             int max = 0;
@@ -183,43 +174,43 @@ public class DrawPolygon extends JPanel {
             }
             
             // FILL: loop through municipalities
-            for (int i = 0; i < geoData.getNbMunicip(); i++) {
+            for (int i = 0; i < GeoData.getNbMunicip(); i++) {
                 // don't draw if no connextion
                 if( connPerMunicip[i] > 1 ) {
                     // choose color
-                    float fraction = (float) Math.log( connPerMunicip[i] ) / (float) Math.log( max );
-                    col = Color.getHSBColor( 1.0f, fraction, 0.65f );
+                    col = colorFactory( connPerMunicip[i], max, true );
                     // fill polygon
                     fillMunicip( g2, i, col );
                 }
             }
+            // draw legend with scale
+            this.drawLegend( g2, max , true );
         }
-        
         // draw borders on top
         this.drawBorder(g2);
+        
     }
     
     // draw infections per municipality
-    private void drawInfections(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
+    private void drawInfections(Graphics2D g2) {
         
         Color col;
         // get max value
         int maxInfect = Municipality.getMaxInfections();
         float maxInfectPerInhab = Municipality.getMaxInfectPerInhab();
         // loop through municipalities
-        for (int i = 0; i < geoData.getNbMunicip(); i++) {
+        for (int i = 0; i < GeoData.getNbMunicip(); i++) {
             
             // choose color
             // absolute or relative
             if( DrawPolygon.absoluteRes ) {
                 // draw absoute number
-                int nbInfect = geoData.getMunicip(i).getNbInfections();
+                int nbInfect = GeoData.getMunicip(i).getNbInfections();
                 float fraction = (float) Math.log( nbInfect ) / (float) Math.log( maxInfect );
                 col = Color.getHSBColor( 1.0f, fraction, 0.65f );
             } else {
                 // draw per 1000 inhabitants
-                float nbInfPerInhab = geoData.getMunicip(i).getNbInfectPerInhab();
+                float nbInfPerInhab = GeoData.getMunicip(i).getNbInfectPerInhab();
                 float fraction = nbInfPerInhab / maxInfectPerInhab;
                 col = Color.getHSBColor( 1.0f, fraction, 0.65f );
             }
@@ -231,16 +222,15 @@ public class DrawPolygon extends JPanel {
     }
         
     // draw infections per municipality
-    private void drawK0(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
+    private void drawK0(Graphics2D g2) {
         
         Color col;
         // get max value
         float maxK0 = Municipality.getMaxK0();
         // loop through municipalities
-        for (int i = 0; i < geoData.getNbMunicip(); i++) {
+        for (int i = 0; i < GeoData.getNbMunicip(); i++) {
             
-            float valK0 = geoData.getMunicip(i).getK0();
+            float valK0 = GeoData.getMunicip(i).getK0();
             // choose color
             float fraction = valK0 / maxK0;
             col = Color.getHSBColor( 1.0f, fraction, 0.65f );
@@ -257,8 +247,8 @@ public class DrawPolygon extends JPanel {
         g2.setColor( col );
         
         // prepare polygons
-        List<int[]> listPolyX = geoData.getMunicip(i).getPolyX();
-        List<int[]> listPolyY = geoData.getMunicip(i).getPolyY();
+        List<int[]> listPolyX = GeoData.getMunicip(i).getPolyX();
+        List<int[]> listPolyY = GeoData.getMunicip(i).getPolyY();
         int nb = listPolyX.size();
 
         // draw polygons
@@ -282,8 +272,46 @@ public class DrawPolygon extends JPanel {
             }
         }
     }
+    
     // set draw absolute or per 1'000 inhabitants
     public static void setAbsoluteResultats(boolean bool) {
         DrawPolygon.absoluteRes = bool;
+    }
+    
+    // LEGEND
+    private void drawLegend( Graphics2D g2, int max, boolean isLog ) {
+        // positon: right upper corner
+        int posX = this.getWidth() - 20;
+        int posY = 20;
+        
+        // length of segment
+        int lenSegm = 20;
+        
+        g2.setStroke(new BasicStroke(4));
+        g2.setColor( colorFactory( 1, 1, true ) );
+        
+        g2.drawLine( posX, posY,
+                     posX, posY+lenSegm);
+        
+        // TEXT LEGEND
+        // format
+        NumberFormat formatter = new DecimalFormat("###,###.##");
+        
+        String label = String.valueOf( formatter.format( max ) );
+        g2.setFont(new Font("Dialog", Font.PLAIN, 12) );
+        int strWidth = g2.getFontMetrics().stringWidth( label );
+        posX = posX - strWidth - 5;
+        posY = posY - 6;
+        
+        g2.setColor( Color.black );
+        g2.drawString(label, posX, posY);
+        
+    }
+    
+    private static Color colorFactory( int val, int maxVal, boolean isLog ) {
+        
+        float fraction = (float) Math.log( val ) / (float) Math.log( maxVal );
+        return Color.getHSBColor( 1.0f, fraction, 0.65f );
+        
     }
 }

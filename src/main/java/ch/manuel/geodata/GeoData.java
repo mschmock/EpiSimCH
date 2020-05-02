@@ -5,6 +5,9 @@ package ch.manuel.geodata;
 
 //Klasse zum Verwalten der Geodaten (Gemeindegrenzen, Einwohner, Altersklassen)
 
+import ch.manuel.episimch.DataLoader;
+import ch.manuel.population.Person;
+import ch.manuel.population.Population;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -82,6 +85,25 @@ public class GeoData {
         }
     }
     
+    // get list with connections per municip for specific index
+    public static int[] getConnPerMunicip( int index ) {
+        int[] arrInhabit = GeoData.getMunicip( index ).getArrListPers();
+        
+        // array with connection per municipality
+        int[] connPerMunicip = new int[ GeoData.getNbMunicip() ];
+        // loop through inhabitants
+        for (int i = 0; i < arrInhabit.length; i++ ) {
+            Person pers = Population.getPerson( arrInhabit[i] );
+
+            // loop through connections
+            for ( int j = 0; j < pers.getListNetwork().size(); j++) {
+                int ind = Population.getPerson( pers.getListNetwork().get(j) ).getIndexMunicip();
+                connPerMunicip[ind]++;
+            }
+        }
+        return connPerMunicip;
+    }
+    
     // setter
     // map id with municipality
     public void setID(int id, Municipality obj) {
@@ -91,10 +113,10 @@ public class GeoData {
     
     
     // getter
-    public Municipality getLastElement() {
+    public static Municipality getLastElement() {
         return GeoData.listMunicip.get(nbMunicip - 1);
     }
-    public Municipality getMunicip(int index) {
+    public static Municipality getMunicip(int index) {
         return GeoData.listMunicip.get(index);
     }
     public Municipality getMunicipByID(int id) {
@@ -103,7 +125,7 @@ public class GeoData {
     private static int getLastIndex() {
         return GeoData.listMunicip.size() - 1;
     }
-    public int getNbMunicip() {
+    public static int getNbMunicip() {
         return GeoData.nbMunicip;
     }
     public int getBoundX() {

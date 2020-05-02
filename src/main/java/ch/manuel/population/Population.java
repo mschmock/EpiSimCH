@@ -4,6 +4,7 @@
 package ch.manuel.population;
 
 import ch.manuel.episimch.DataLoader;
+import ch.manuel.geodata.GeoData;
 import ch.manuel.graphics.InputNetwork;
 import ch.manuel.graphics.MainFrame;
 import ch.manuel.utilities.MyUtilities;
@@ -346,11 +347,11 @@ public class Population implements Runnable {
     // create population (objects)
     public void createPop() {
         
-        int nbMunicip = DataLoader.geoData.getNbMunicip();
+        int nbMunicip = GeoData.getNbMunicip();
         
         // create population for each municipality
         for (int i = 0; i < nbMunicip; i++) {
-            int pop = DataLoader.geoData.getMunicip( i ).getPopulation();
+            int pop = GeoData.getMunicip( i ).getPopulation();
             
             // create array with indexes for Municip i
             int[] tmpList = new int[pop];
@@ -398,7 +399,7 @@ public class Population implements Runnable {
                 // create person
                 for (int k = 0; k < nb; k++) {
                     // create new Person
-                    Population.listPersons.add( new Person(j, DataLoader.geoData.getMunicip( i ) ));
+                    Population.listPersons.add( new Person(j, GeoData.getMunicip( i ) ));
                     // update index list in object
                     int lastIndex = Population.getLastIndex();
                     Population.listPersons.get( lastIndex ).setIndex( lastIndex );
@@ -408,7 +409,7 @@ public class Population implements Runnable {
                     counter++;
                 }
             }
-            DataLoader.geoData.getMunicip( i ).setListPers( tmpList );
+            GeoData.getMunicip( i ).setListPers( tmpList );
         }
     }
     

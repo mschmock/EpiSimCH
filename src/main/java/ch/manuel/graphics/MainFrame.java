@@ -83,6 +83,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuItem5 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(400, 300));
 
         customPanel.setBackground(new java.awt.Color(204, 204, 204));
         customPanel.addMouseListener(new java.awt.event.MouseAdapter() {

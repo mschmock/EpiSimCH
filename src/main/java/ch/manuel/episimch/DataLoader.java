@@ -139,7 +139,7 @@ public class DataLoader implements Runnable {
                 input = attriObj.get("GMDNR").toString();
                 if( MyUtilities.isInteger( input ) ) {
                     // setID --> map with [id, object]
-                    geoData.setID( Integer.parseInt( input ), geoData.getLastElement() );
+                    geoData.setID( Integer.parseInt( input ), GeoData.getLastElement() );
                 } else {
                     errMsg = geoDataJSON + "\nFehler im Objekt " + idName + ", element: 'GMDNR'";
                     hasErr = true;
@@ -148,7 +148,7 @@ public class DataLoader implements Runnable {
                 // Zentrum: Koordinate LV 95 E
                 input = attriObj.get("E_CNTR").toString();
                 if( MyUtilities.isInteger( input ) ) {
-                    geoData.getLastElement().setCenterE( Integer.parseInt( input ) );
+                    GeoData.getLastElement().setCenterE( Integer.parseInt( input ) );
                 } else {
                     errMsg = geoDataJSON + "\nFehler im Objekt " + idName + ", element: 'E_CNTR'";
                     hasErr = true;
@@ -157,7 +157,7 @@ public class DataLoader implements Runnable {
                 // Zentrum: Koordinate LV 95 N
                 input = attriObj.get("N_CNTR").toString();
                 if( MyUtilities.isInteger( input ) ) {
-                    geoData.getLastElement().setCenterN( Integer.parseInt( input ) );
+                    GeoData.getLastElement().setCenterN( Integer.parseInt( input ) );
                 } else {
                     errMsg = geoDataJSON + "\nFehler im Objekt " + idName + ", element: 'N_CNTR'";
                     hasErr = true;
@@ -166,7 +166,7 @@ public class DataLoader implements Runnable {
                 // Umgrenzung: min Koordinate LV 95 N
                 input = attriObj.get("N_MIN").toString();
                 if( MyUtilities.isInteger( input ) ) {
-                    geoData.getLastElement().setMinN( Integer.parseInt( input ) );
+                    GeoData.getLastElement().setMinN( Integer.parseInt( input ) );
                 } else {
                     errMsg = geoDataJSON + "\nFehler im Objekt " + idName + ", element: 'N_MIN'";
                     hasErr = true;
@@ -175,7 +175,7 @@ public class DataLoader implements Runnable {
                 // Umgrenzung: max Koordinate LV 95 N
                 input = attriObj.get("N_MAX").toString();
                 if( MyUtilities.isInteger( input ) ) {
-                    geoData.getLastElement().setMaxN( Integer.parseInt( input ) );
+                    GeoData.getLastElement().setMaxN( Integer.parseInt( input ) );
                 } else {
                     errMsg = geoDataJSON + "\nFehler im Objekt " + idName + ", element: 'N_MAX'";
                     hasErr = true;
@@ -184,7 +184,7 @@ public class DataLoader implements Runnable {
                 // Umgrenzung: min Koordinate LV 95 E
                 input = attriObj.get("E_MIN").toString();
                 if( MyUtilities.isInteger( input ) ) {
-                    geoData.getLastElement().setMinE( Integer.parseInt( input ) );
+                    GeoData.getLastElement().setMinE( Integer.parseInt( input ) );
                 } else {
                     errMsg = geoDataJSON + "\nFehler im Objekt " + idName + ", element: 'E_MIN'";
                     hasErr = true;
@@ -193,14 +193,14 @@ public class DataLoader implements Runnable {
                 // Umgrenzung: max Koordinate LV 95 E
                 input = attriObj.get("E_MAX").toString();
                 if( MyUtilities.isInteger(input) ) {
-                    geoData.getLastElement().setMaxE( Integer.parseInt( input ) );
+                    GeoData.getLastElement().setMaxE( Integer.parseInt( input ) );
                 } else {
                     errMsg = geoDataJSON + "\nFehler im Objekt " + idName + ", element: 'E_MAX'";
                     hasErr = true;
                     break;
                 }
                 // Polygon Gemeindegrenze
-                if( !geoData.getLastElement().setPolygon( attriObj.get("POLYGON").toString() ) ) {
+                if( !GeoData.getLastElement().setPolygon( attriObj.get("POLYGON").toString() ) ) {
                     errMsg = geoDataJSON + "\nFehler im Objekt " + idName + ", element: 'POLYGON'";
                     hasErr = true;
                     break;
@@ -394,7 +394,7 @@ public class DataLoader implements Runnable {
     
     // set status text in Dialog
     void setStatusText() {
-        Startup.dialog.addText( "Loaded Municipalities: " + geoData.getNbMunicip() + "\n");
+        Startup.dialog.addText( "Loaded Municipalities: " + GeoData.getNbMunicip() + "\n");
         Startup.dialog.addText( "Bounds xMin " + geoData.getBoundX() + 
                                         ", yMin " + geoData.getBoundY() + "\n");
         Startup.dialog.addText( "\tWidth " + geoData.getWidth() +
