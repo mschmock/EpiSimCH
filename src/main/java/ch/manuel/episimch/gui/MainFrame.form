@@ -213,7 +213,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="ch.manuel.graphics.DrawPolygon" name="customPanel">
+    <Container class="ch.manuel.graphics.PolygonPanel" name="customPanel">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="cc" green="cc" red="cc" type="rgb"/>
@@ -223,7 +223,7 @@
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="customPanelMouseClicked"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new DrawPolygon();"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ch.manuel.graphics.PolygonPanel();"/>
         <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="MainFrame_jPanel1"/>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
       </AuxValues>

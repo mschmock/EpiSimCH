@@ -26,38 +26,39 @@ import java.util.Map;
 import javax.swing.JPanel;
 
 
-public class DrawPolygon extends JPanel {
+public class PolygonPanel extends JPanel {
 
     // access to geodata
     private static GeoData geoData;
-    
     // list polygons
     private static List<Polygon> listPoly; 
-    
+    // legend (in jPanel)
+    private static Legend legend;
     // transformation
     private final AffineTransform tx;
     private static final int pxBORDER = 16;                     // border in pixel
     private static Map<Integer,Municipality> mapID;             // map with id of municipalities
-    
     // network
     private static Municipality selectedMunicip;
-    
     // draw per absolute or per 1'000?
     private static boolean absoluteRes;
         
         
     // Constructor
-    public DrawPolygon() {
+    public PolygonPanel() {
         super();
         
         // initialisation
-        DrawPolygon.absoluteRes = true;
+        PolygonPanel.absoluteRes = true;
         listPoly = new ArrayList<>();
         mapID = new HashMap<Integer,Municipality>();
         
         // get polygons from geoData
-        DrawPolygon.geoData = DataLoader.geoData; 
+        PolygonPanel.geoData = DataLoader.geoData; 
         initPolygons();
+        
+        // legend
+        legend = new Legend( this );
         
         // init transformation
         this.tx = new AffineTransform();
@@ -106,8 +107,10 @@ public class DrawPolygon extends JPanel {
                     break;
                 default:
                     drawBorder( g2 );
-            } 
+            }
         }
+        // draw legend
+        legend.drawLegend( g2 );
     }
     
     // repaint on click
@@ -153,17 +156,17 @@ public class DrawPolygon extends JPanel {
         
         Color col;
         // Filling for selected municip.
-        if( DrawPolygon.selectedMunicip != null ) {
+        if( PolygonPanel.selectedMunicip != null ) {
             
-            int index = DrawPolygon.selectedMunicip.getIndex();
+            int index = PolygonPanel.selectedMunicip.getIndex();
             col = Color.getHSBColor( 1.0f, 1.0f, 0.65f );
             // fill polygon
             fillMunicip( g2, index, col );
         }
         
         // draw connextions
-        if( Population.getNetworkIsCreated() && (DrawPolygon.selectedMunicip != null) ) {
-            int index = DrawPolygon.selectedMunicip.getIndex();
+        if( Population.getNetworkIsCreated() && (PolygonPanel.selectedMunicip != null) ) {
+            int index = PolygonPanel.selectedMunicip.getIndex();
             
             // array with connection per municipality
             int[] connPerMunicip = GeoData.getConnPerMunicip( index );
@@ -172,6 +175,8 @@ public class DrawPolygon extends JPanel {
             int max = 0;
             for ( int i = 0; i < connPerMunicip.length; i++ ) {
                 if( max < connPerMunicip[i] ) { max = connPerMunicip[i]; }
+                // set max legend + color
+                legend.setMaxVal(max);
             }
             
             // FILL: loop through municipalities
@@ -179,13 +184,11 @@ public class DrawPolygon extends JPanel {
                 // don't draw if no connextion
                 if( connPerMunicip[i] > 1 ) {
                     // choose color
-                    col = colorFactory( connPerMunicip[i], max, true );
+                    col = legend.colorFactory( connPerMunicip[i] );
                     // fill polygon
                     fillMunicip( g2, i, col );
                 }
             }
-            // draw legend with scale
-            this.drawLegend( g2, max , true );
         }
         // draw borders on top
         this.drawBorder(g2);
@@ -204,7 +207,7 @@ public class DrawPolygon extends JPanel {
             
             // choose color
             // absolute or relative
-            if( DrawPolygon.absoluteRes ) {
+            if( PolygonPanel.absoluteRes ) {
                 // draw absoute number
                 int nbInfect = GeoData.getMunicip(i).getNbInfections();
                 float fraction = (float) Math.log( nbInfect ) / (float) Math.log( maxInfect );
@@ -267,8 +270,8 @@ public class DrawPolygon extends JPanel {
         for( int i = 0; i < listPoly.size(); i++ ) {
             Shape shape = this.tx.createTransformedShape( listPoly.get(i) );
             if( shape.contains(p) ) {
-                DrawPolygon.selectedMunicip = DrawPolygon.mapID.get(i);
-                MainFrame.setStatusText("Selected: " + DrawPolygon.mapID.get(i).getName() );
+                PolygonPanel.selectedMunicip = PolygonPanel.mapID.get(i);
+                MainFrame.setStatusText("Selected: " + PolygonPanel.mapID.get(i).getName() );
                 break;
             }
         }
@@ -276,43 +279,7 @@ public class DrawPolygon extends JPanel {
     
     // set draw absolute or per 1'000 inhabitants
     public static void setAbsoluteResultats(boolean bool) {
-        DrawPolygon.absoluteRes = bool;
+        PolygonPanel.absoluteRes = bool;
     }
     
-    // LEGEND
-    private void drawLegend( Graphics2D g2, int max, boolean isLog ) {
-        // positon: right upper corner
-        int posX = this.getWidth() - 20;
-        int posY = 20;
-        
-        // length of segment
-        int lenSegm = 20;
-        
-        g2.setStroke(new BasicStroke(4));
-        g2.setColor( colorFactory( 1, 1, true ) );
-        
-        g2.drawLine( posX, posY,
-                     posX, posY+lenSegm);
-        
-        // TEXT LEGEND
-        // format
-        NumberFormat formatter = new DecimalFormat("###,###.##");
-        
-        String label = String.valueOf( formatter.format( max ) );
-        g2.setFont(new Font("Dialog", Font.PLAIN, 12) );
-        int strWidth = g2.getFontMetrics().stringWidth( label );
-        posX = posX - strWidth - 5;
-        posY = posY - 6;
-        
-        g2.setColor( Color.black );
-        g2.drawString(label, posX, posY);
-        
-    }
-    
-    private static Color colorFactory( int val, int maxVal, boolean isLog ) {
-        
-        float fraction = (float) Math.log( val ) / (float) Math.log( maxVal );
-        return Color.getHSBColor( 1.0f, fraction, 0.65f );
-        
-    }
 }

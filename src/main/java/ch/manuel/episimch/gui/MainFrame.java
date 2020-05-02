@@ -7,7 +7,7 @@ import ch.manuel.episimch.Calculation;
 import ch.manuel.episimch.DataLoader;
 import ch.manuel.episimch.Startup;
 import ch.manuel.graphics.ChartFrame;
-import ch.manuel.graphics.DrawPolygon;
+import ch.manuel.graphics.PolygonPanel;
 import ch.manuel.graphics.XY_Chart;
 import ch.manuel.population.Population;
 import ch.manuel.utilities.MyUtilities;
@@ -65,7 +65,7 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        customPanel = new DrawPolygon();
+        customPanel = new PolygonPanel();
         jButton1 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -344,12 +344,12 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // absolute results if NOT selected
-        DrawPolygon.setAbsoluteResultats( !jCheckBox1.isSelected() );
+        PolygonPanel.setAbsoluteResultats( !jCheckBox1.isSelected() );
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private static ch.manuel.graphics.DrawPolygon customPanel;
+    private static ch.manuel.graphics.PolygonPanel customPanel;
     private static javax.swing.JButton jButton1;
     private static javax.swing.JButton jButton2;
     private static javax.swing.JCheckBox jCheckBox1;
