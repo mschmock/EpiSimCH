@@ -6,9 +6,9 @@ package ch.manuel.episimch;
 // calculation kernel
 
 import ch.manuel.geodata.Municipality;
-import ch.manuel.graphics.InputCalc;
+import ch.manuel.episimch.gui.InputCalc;
 import ch.manuel.graphics.XY_Chart;
-import ch.manuel.graphics.MainFrame;
+import ch.manuel.episimch.gui.MainFrame;
 import ch.manuel.population.Infection;
 import ch.manuel.population.Person;
 import ch.manuel.population.Population;

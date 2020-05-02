@@ -1,7 +1,7 @@
 //Autor: Manuel Schmocker
 //Datum: 12.04.2020
 
-package ch.manuel.graphics;
+package ch.manuel.episimch.gui;
 
 import ch.manuel.episimch.Calculation;
 import ch.manuel.population.Infection;

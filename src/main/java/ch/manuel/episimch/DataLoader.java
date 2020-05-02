@@ -6,7 +6,7 @@ package ch.manuel.episimch;
 import ch.manuel.utilities.MyUtilities;
 import ch.manuel.geodata.GeoData;
 import ch.manuel.geodata.Municipality;
-import ch.manuel.graphics.MainFrame;
+import ch.manuel.episimch.gui.MainFrame;
 import ch.manuel.population.Person;
 import ch.manuel.population.Population;
 import java.io.BufferedReader;

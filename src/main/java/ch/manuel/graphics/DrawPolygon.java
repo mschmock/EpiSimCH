@@ -3,6 +3,7 @@
 
 package ch.manuel.graphics;
 
+import ch.manuel.episimch.gui.MainFrame;
 import ch.manuel.episimch.DataLoader;
 import ch.manuel.geodata.GeoData;
 import ch.manuel.geodata.Municipality;

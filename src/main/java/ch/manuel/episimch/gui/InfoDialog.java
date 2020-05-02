@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ch.manuel.graphics;
+package ch.manuel.episimch.gui;
 
 // Info-Panel during startup process
 

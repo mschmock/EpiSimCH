@@ -5,7 +5,6 @@ package ch.manuel.geodata;
 
 //Klasse zum Verwalten der Geodaten (Gemeindegrenzen, Einwohner, Altersklassen)
 
-import ch.manuel.episimch.DataLoader;
 import ch.manuel.population.Person;
 import ch.manuel.population.Population;
 import java.util.ArrayList;

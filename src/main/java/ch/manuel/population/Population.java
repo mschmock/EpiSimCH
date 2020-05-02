@@ -5,8 +5,8 @@ package ch.manuel.population;
 
 import ch.manuel.episimch.DataLoader;
 import ch.manuel.geodata.GeoData;
-import ch.manuel.graphics.InputNetwork;
-import ch.manuel.graphics.MainFrame;
+import ch.manuel.episimch.gui.InputNetwork;
+import ch.manuel.episimch.gui.MainFrame;
 import ch.manuel.utilities.MyUtilities;
 import java.util.ArrayList;
 import java.util.List;

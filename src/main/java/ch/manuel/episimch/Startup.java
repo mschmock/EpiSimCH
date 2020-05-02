@@ -3,8 +3,8 @@
 
 package ch.manuel.episimch;
 
-import ch.manuel.graphics.InfoDialog;
-import ch.manuel.graphics.MainFrame;
+import ch.manuel.episimch.gui.InfoDialog;
+import ch.manuel.episimch.gui.MainFrame;
 import ch.manuel.utilities.MyUtilities;
 import java.io.File;
 import java.io.IOException;
