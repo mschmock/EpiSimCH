@@ -20,13 +20,11 @@ public class Legend {
     // legend: geometry
     private final int LEN_SEGM = 20;
     private final int OFFS_BORDER = 20;     // distance to border
-    private int posX0;
-    private int posY0;
     // size of panel
     private int panelWidth;
     private int panelHeight;
     // max Value for legend
-    private int maxValLegend;
+    private double maxValLegend;
     // logarithmic scale
     private boolean isLog;
     // number format
@@ -36,8 +34,6 @@ public class Legend {
     public Legend( PolygonPanel polyPanel) {
         this.polyPanel = polyPanel;
         
-        // format
-        formatter = new DecimalFormat("###,###.##");
     }
     
     // recalculate size
@@ -49,6 +45,14 @@ public class Legend {
 
     
     protected void drawLegend( Graphics2D g2 ) {
+        if( this.isLog ) {
+            drawLegendLog( g2 );
+        } else {
+            drawLegendLin( g2 );
+        }
+    }
+    
+    private void drawLegendLog( Graphics2D g2 ) {
         // update panel size
         setSize();
         
@@ -107,16 +111,47 @@ public class Legend {
         g2.drawString(txt, posX, posY);
     }
     
+    private void drawLegendLin( Graphics2D g2 ) {
+        // update panel size
+        setSize();
+        
+        // nb of segments (fixed)
+        int nbSegm = 5;
+        
+        // SEGMENTS
+        g2.setStroke(new BasicStroke(6));
+        // segment 1 to N
+        for( int i = nbSegm; i > 0; i-- ) {
+            double val = this.maxValLegend / nbSegm * i;
+            g2.setColor( colorFactory( val ) );
+            drawSegment( (nbSegm-i), g2 ); 
+        }
+        
+        // TEXT LEGEND
+        g2.setColor( Color.black );
+        g2.setFont(new Font("Dialog", Font.PLAIN, 11) );
+        String label;
+        for( int i = nbSegm; i > 0; i-- ) {
+            double val = this.maxValLegend / nbSegm * i;
+            label = String.valueOf( formatter.format( val ) );
+            drawAnnotation( label, (nbSegm-i-1), g2 );
+        }
+    }
 
-    public Color colorFactory( int val ) {
+    public Color colorFactory( double val ) {
         float fraction;
         if( this.isLog ) {
-            fraction = (float) Math.log( val ) / (float) Math.log( this.maxValLegend );
+            fraction = (float) (Math.log( val ) / Math.log( this.maxValLegend ) );
         } else {
-            double tmp =  (double) val  / (double) this.maxValLegend ; 
+            double tmp = val  / this.maxValLegend ; 
             fraction = (float) tmp;
         }
         return Color.getHSBColor( 1.0f, fraction, 0.65f );
+    }
+    
+    // reset max 
+    protected void resetMaxVal() {
+        this.maxValLegend = 0;
     }
     
     // getter
@@ -130,9 +165,25 @@ public class Legend {
     }
     // setters
     public void setMaxVal( int max ) {
-        this.maxValLegend = max;
+        if( max > this.maxValLegend ) {
+            this.maxValLegend = roundFunc( max );
+        } 
+        formatter = new DecimalFormat("###,###");
+    }
+    public void setMaxVal( double max ) {
+        if( max > this.maxValLegend ) {
+            this.maxValLegend = roundFunc( max );
+        } 
+        formatter = new DecimalFormat("###,###.00");
     }
     public void setLogScale( boolean bool ) {
         this.isLog = bool;
+    }
+    
+    // rounding function
+    private double roundFunc( double val ) {
+        int order = (int) Math.log10( val );
+        order = (int) Math.pow(10, order);
+        return Math.ceil( val/order ) * order;
     }
 }

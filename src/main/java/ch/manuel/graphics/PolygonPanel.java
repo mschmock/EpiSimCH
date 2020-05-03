@@ -10,15 +10,12 @@ import ch.manuel.geodata.Municipality;
 import ch.manuel.population.Population;
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +78,6 @@ public class PolygonPanel extends JPanel {
                     // create map with municipalities
                     mapID.put( listPoly.size()-1, GeoData.getMunicip(i) );
                 }
-
             }
         }
     }
@@ -109,8 +105,6 @@ public class PolygonPanel extends JPanel {
                     drawBorder( g2 );
             }
         }
-        // draw legend
-        legend.drawLegend( g2 );
     }
     
     // repaint on click
@@ -147,22 +141,12 @@ public class PolygonPanel extends JPanel {
         for( int i = 0; i < listPoly.size(); i++ ) {
             Shape shape = this.tx.createTransformedShape( listPoly.get(i) );
             g2.draw(shape);
-
         }  
     }
     
     private void drawNetwork(Graphics2D g2) {
         
         Color col;
-        // Filling for selected municip.
-        if( PolygonPanel.selectedMunicip != null ) {
-            
-            int index = PolygonPanel.selectedMunicip.getIndex();
-            col = Color.getHSBColor( 1.0f, 1.0f, 0.65f );
-            // fill polygon
-            fillMunicip( g2, index, col );
-        }
-        
         // draw connextions
         if( Population.getNetworkIsCreated() && (PolygonPanel.selectedMunicip != null) ) {
             int index = PolygonPanel.selectedMunicip.getIndex();
@@ -189,40 +173,59 @@ public class PolygonPanel extends JPanel {
                     fillMunicip( g2, i, col );
                 }
             }
+        // draw legend
+        legend.drawLegend( g2 );
+        
+        // Filling for selected municip (only if no network available)
+        } else if ( PolygonPanel.selectedMunicip != null ) {
+            // index of selected municip
+            int index = PolygonPanel.selectedMunicip.getIndex();
+            col = Color.getHSBColor( 0.5f, 1.0f, 0.65f );
+            // fill polygon
+            fillMunicip( g2, index, col );
         }
         // draw borders on top
         this.drawBorder(g2);
-        
     }
     
     // draw infections per municipality
     private void drawInfections(Graphics2D g2) {
         
         Color col;
-        // get max value
-        int maxInfect = Municipality.getMaxInfections();
-        float maxInfectPerInhab = Municipality.getMaxInfectPerInhab();
-        // loop through municipalities
-        for (int i = 0; i < GeoData.getNbMunicip(); i++) {
-            
-            // choose color
-            // absolute or relative
-            if( PolygonPanel.absoluteRes ) {
+        // absolute or relative
+        if( PolygonPanel.absoluteRes ) {
+            // get max value
+            int maxInfect = Municipality.getMaxInfections();
+            // prepare legend
+            legend.setMaxVal( maxInfect );        // max value
+            legend.setLogScale( true );           // logarithmic scale
+            // loop through municipalities
+            for (int i = 0; i < GeoData.getNbMunicip(); i++) {
                 // draw absoute number
-                int nbInfect = GeoData.getMunicip(i).getNbInfections();
-                float fraction = (float) Math.log( nbInfect ) / (float) Math.log( maxInfect );
-                col = Color.getHSBColor( 1.0f, fraction, 0.65f );
-            } else {
-                // draw per 1000 inhabitants
-                float nbInfPerInhab = GeoData.getMunicip(i).getNbInfectPerInhab();
-                float fraction = nbInfPerInhab / maxInfectPerInhab;
-                col = Color.getHSBColor( 1.0f, fraction, 0.65f );
+                // choose color from legend
+                col = legend.colorFactory( GeoData.getMunicip(i).getNbInfections() );
+                // fill polygon
+                fillMunicip( g2, i, col );
             }
-            // fill polygon
-            fillMunicip( g2, i, col );
+        } else {
+            // get max value
+            float maxInfectPerInhab = Municipality.getMaxInfectPerInhab();
+            // prepare legend
+            legend.setMaxVal( maxInfectPerInhab );      // max value
+            legend.setLogScale( false );                // logarithmic scale
+            // loop through municipalities
+            for (int i = 0; i < GeoData.getNbMunicip(); i++) {
+                // draw per 1000 inhabitants
+                // choose color from legend
+                col = legend.colorFactory( GeoData.getMunicip(i).getNbInfectPerInhab() );
+                // fill polygon
+                fillMunicip( g2, i, col );
+            }
         }
+        // draw legend
+        legend.drawLegend( g2 );
         // draw borders on top
-        this.drawBorder(g2);
+        this.drawBorder(g2);      
     }
         
     // draw infections per municipality
@@ -230,17 +233,17 @@ public class PolygonPanel extends JPanel {
         
         Color col;
         // get max value
-        float maxK0 = Municipality.getMaxK0();
+        legend.setMaxVal( Municipality.getMaxK0() );    // max value
+        legend.setLogScale( false );                    // logarithmic scale
         // loop through municipalities
         for (int i = 0; i < GeoData.getNbMunicip(); i++) {
-            
-            float valK0 = GeoData.getMunicip(i).getK0();
-            // choose color
-            float fraction = valK0 / maxK0;
-            col = Color.getHSBColor( 1.0f, fraction, 0.65f );
+            // choose color from legend
+            col = legend.colorFactory( GeoData.getMunicip(i).getK0() );
             // fill polygon
             fillMunicip( g2, i, col );
         }
+        // draw legend
+        legend.drawLegend( g2 );
         // draw borders on top
         this.drawBorder(g2);
     }
@@ -282,4 +285,8 @@ public class PolygonPanel extends JPanel {
         PolygonPanel.absoluteRes = bool;
     }
     
+    // vue changed
+    public static void vueChanged() {
+        legend.resetMaxVal();
+    }
 }

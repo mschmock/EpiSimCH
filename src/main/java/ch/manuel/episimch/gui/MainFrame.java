@@ -290,6 +290,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // element selected in menu
+        PolygonPanel.vueChanged();
         MainFrame.selectedIndex = jComboBox1.getSelectedIndex();
         MainFrame.customPanel.repaintPanel();
     }//GEN-LAST:event_jComboBox1ActionPerformed
@@ -323,6 +324,7 @@ public class MainFrame extends javax.swing.JFrame {
             Calculation.resetCalc();
             Population.resetInfection();
             XY_Chart.resetChart();
+            PolygonPanel.vueChanged();
         }
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
@@ -344,6 +346,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // absolute results if NOT selected
+        PolygonPanel.vueChanged();
         PolygonPanel.setAbsoluteResultats( !jCheckBox1.isSelected() );
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
