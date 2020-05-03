@@ -167,14 +167,14 @@ public class Legend {
     public void setMaxVal( int max ) {
         if( max > this.maxValLegend ) {
             this.maxValLegend = roundFunc( max );
-        } 
-        formatter = new DecimalFormat("###,###");
+            formatter = new DecimalFormat("###,###");
+        }
     }
     public void setMaxVal( double max ) {
         if( max > this.maxValLegend ) {
             this.maxValLegend = roundFunc( max );
-        } 
-        formatter = new DecimalFormat("###,###.00");
+            formatter = new DecimalFormat("###,##0.00");
+        }
     }
     public void setLogScale( boolean bool ) {
         this.isLog = bool;

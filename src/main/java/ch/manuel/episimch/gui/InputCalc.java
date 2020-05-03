@@ -23,6 +23,8 @@ public class InputCalc extends javax.swing.JDialog {
         
         // set standard-values for calculation
         InputCalc.validInput = this.initValues();
+        // disable change of numbers of contacts on day N
+        InputCalc.setContactModifActive( false );
     }
 
     /**
@@ -37,23 +39,36 @@ public class InputCalc extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
+        spinnRandCont1 = new javax.swing.JSpinner();
         jLabel4 = new javax.swing.JLabel();
-        jSpinner3 = new javax.swing.JSpinner();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
+        spinnInfDay0 = new javax.swing.JSpinner();
+        inputProbab1 = new javax.swing.JTextField();
+        labelDay0 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jSpinner2 = new javax.swing.JSpinner();
+        spinnPermCont1 = new javax.swing.JSpinner();
         jLabel5 = new javax.swing.JLabel();
-        jSpinner4 = new javax.swing.JSpinner();
+        spinnDaysToRecov = new javax.swing.JSpinner();
         jLabel6 = new javax.swing.JLabel();
-        jSpinner5 = new javax.swing.JSpinner();
+        spinnRecovVari = new javax.swing.JSpinner();
         jLabel8 = new javax.swing.JLabel();
-        jSpinner6 = new javax.swing.JSpinner();
+        spinnDaysToInf = new javax.swing.JSpinner();
         jLabel9 = new javax.swing.JLabel();
-        jSpinner7 = new javax.swing.JSpinner();
+        spinnMaxCalcDays = new javax.swing.JSpinner();
         jLabel10 = new javax.swing.JLabel();
-        jSpinner8 = new javax.swing.JSpinner();
+        spinnImmDay0 = new javax.swing.JSpinner();
+        labelContacts = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel12 = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jLabel13 = new javax.swing.JLabel();
+        spinnRandCont2 = new javax.swing.JSpinner();
+        spinnPermCont2 = new javax.swing.JSpinner();
+        inputProbab2 = new javax.swing.JTextField();
+        spinnChangeDay = new javax.swing.JSpinner();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel14 = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
+        jLabel15 = new javax.swing.JLabel();
 
         setTitle("Input Parameter");
         setResizable(false);
@@ -67,49 +82,80 @@ public class InputCalc extends javax.swing.JDialog {
             }
         });
 
-        jLabel3.setText("Anzahl Infizierte am Tag 0:");
+        jLabel3.setText("Anzahl Infizierte am Tag 0");
 
-        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(2, 0, 30, 1));
+        spinnRandCont1.setModel(new javax.swing.SpinnerNumberModel(2, 0, 30, 1));
 
         jLabel4.setText("Wahrscheinlichkeit für Übertragung:");
         jLabel4.setToolTipText("Wahrscheinlichkeit für Übertragung pro Kontakt");
 
-        jSpinner3.setModel( getModel3());
+        spinnInfDay0.setModel( getModel3());
 
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField1.setText("0.015");
+        inputProbab1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        inputProbab1.setText("0.015");
 
-        jLabel7.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        jLabel7.setText("Parameter Start");
+        labelDay0.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
+        labelDay0.setText("Parameter Tag 0 (Start Berechnung):");
 
         jLabel2.setText("Anzahl permanente Kontakte pro Tag:");
 
-        jSpinner2.setModel(new javax.swing.SpinnerNumberModel(8, 0, 30, 1));
+        spinnPermCont1.setModel(new javax.swing.SpinnerNumberModel(8, 0, 30, 1));
 
         jLabel5.setText("Tage bis Genesung");
         jLabel5.setToolTipText("");
 
-        jSpinner4.setModel(new javax.swing.SpinnerNumberModel(14, 2, 30, 1));
+        spinnDaysToRecov.setModel(new javax.swing.SpinnerNumberModel(14, 2, 30, 1));
 
         jLabel6.setText("Abweichung Genesung: +/- Tage");
         jLabel6.setToolTipText("");
 
-        jSpinner5.setModel(new javax.swing.SpinnerNumberModel(5, 0, 10, 1));
+        spinnRecovVari.setModel(new javax.swing.SpinnerNumberModel(5, 0, 10, 1));
 
         jLabel8.setText("Tage bis eine Person infektiös wird");
         jLabel8.setToolTipText("Anzahl Tage von der Infektion bis eine Übertragung möglich wird");
 
-        jSpinner6.setModel(new javax.swing.SpinnerNumberModel(2, 0, 10, 1));
+        spinnDaysToInf.setModel(new javax.swing.SpinnerNumberModel(2, 0, 10, 1));
 
         jLabel9.setText("Max. Anzahl Tage für Berechnung");
         jLabel9.setToolTipText("");
 
-        jSpinner7.setModel(new javax.swing.SpinnerNumberModel(1000, 1000, 10000, 100));
+        spinnMaxCalcDays.setModel(new javax.swing.SpinnerNumberModel(2000, 1000, 10000, 100));
 
-        jLabel10.setText("Anzahl Immune am Tag 0:");
+        jLabel10.setText("Anzahl Immune am Tag 0");
         jLabel10.setToolTipText("");
 
-        jSpinner8.setModel( getModel8());
+        spinnImmDay0.setModel( getModel8());
+
+        labelContacts.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
+        labelContacts.setText("Kontakte pro Tag");
+
+        jLabel12.setText("Anpassung nach N Tagen:");
+        jLabel12.setToolTipText("");
+
+        jCheckBox1.setText("Aktivieren");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setText("Tag:");
+        jLabel13.setToolTipText("");
+
+        spinnRandCont2.setModel(new javax.swing.SpinnerNumberModel(2, 0, 30, 1));
+
+        spinnPermCont2.setModel(new javax.swing.SpinnerNumberModel(8, 0, 30, 1));
+
+        inputProbab2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        inputProbab2.setText("0.015");
+
+        spinnChangeDay.setModel(new javax.swing.SpinnerNumberModel(100, 1, 10000, 1));
+
+        jLabel14.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
+        jLabel14.setText("Krankheitsverlauf");
+
+        jLabel15.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
+        jLabel15.setText("Berechnung");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -118,96 +164,136 @@ public class InputCalc extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSpinner5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSpinner6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSeparator2)
+                    .addComponent(jSeparator1)
+                    .addComponent(labelDay0, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSpinner7, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel12)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jCheckBox1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel13)
+                                .addGap(25, 25, 25))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(spinnPermCont1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(inputProbab1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(spinnRandCont1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(spinnChangeDay, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(spinnPermCont2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(inputProbab2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(spinnRandCont2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jSeparator3)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelContacts)
+                            .addComponent(jLabel15))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel10)
+                        .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSpinner8, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(spinnMaxCalcDays, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(spinnDaysToInf, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spinnDaysToRecov, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spinnRecovVari, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(spinnInfDay0, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spinnImmDay0, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel7)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(labelDay0)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinnInfDay0, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
-                    .addComponent(jSpinner8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinnImmDay0, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(labelContacts)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(spinnRandCont1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spinnRandCont2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(spinnPermCont1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spinnPermCont2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(inputProbab1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inputProbab2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(jCheckBox1)
+                    .addComponent(spinnChangeDay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinnDaysToRecov, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jSpinner5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinnRecovVari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jSpinner6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinnDaysToInf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jSpinner7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addGap(62, 62, 62)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel15)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(spinnMaxCalcDays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addContainerGap())
         );
 
-        jLabel7.getAccessibleContext().setAccessibleName("jLabel");
+        labelDay0.getAccessibleContext().setAccessibleName("jLabel");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -222,28 +308,45 @@ public class InputCalc extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        setContactModifActive( jCheckBox1.isSelected() );
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private static javax.swing.JTextField inputProbab1;
+    private static javax.swing.JTextField inputProbab2;
     private static javax.swing.JButton jButton2;
+    private javax.swing.JCheckBox jCheckBox1;
     private static javax.swing.JLabel jLabel1;
     private static javax.swing.JLabel jLabel10;
+    private static javax.swing.JLabel jLabel12;
+    private static javax.swing.JLabel jLabel13;
+    private static javax.swing.JLabel jLabel14;
+    private static javax.swing.JLabel jLabel15;
     private static javax.swing.JLabel jLabel2;
     private static javax.swing.JLabel jLabel3;
     private static javax.swing.JLabel jLabel4;
     private static javax.swing.JLabel jLabel5;
     private static javax.swing.JLabel jLabel6;
-    private static javax.swing.JLabel jLabel7;
     private static javax.swing.JLabel jLabel8;
     private static javax.swing.JLabel jLabel9;
-    private static javax.swing.JSpinner jSpinner1;
-    private static javax.swing.JSpinner jSpinner2;
-    private static javax.swing.JSpinner jSpinner3;
-    private static javax.swing.JSpinner jSpinner4;
-    private static javax.swing.JSpinner jSpinner5;
-    private static javax.swing.JSpinner jSpinner6;
-    private static javax.swing.JSpinner jSpinner7;
-    private static javax.swing.JSpinner jSpinner8;
-    private static javax.swing.JTextField jTextField1;
+    private static javax.swing.JSeparator jSeparator1;
+    private static javax.swing.JSeparator jSeparator2;
+    private static javax.swing.JSeparator jSeparator3;
+    private static javax.swing.JLabel labelContacts;
+    private static javax.swing.JLabel labelDay0;
+    private static javax.swing.JSpinner spinnChangeDay;
+    private static javax.swing.JSpinner spinnDaysToInf;
+    private static javax.swing.JSpinner spinnDaysToRecov;
+    private static javax.swing.JSpinner spinnImmDay0;
+    private static javax.swing.JSpinner spinnInfDay0;
+    private static javax.swing.JSpinner spinnMaxCalcDays;
+    private static javax.swing.JSpinner spinnPermCont1;
+    private static javax.swing.JSpinner spinnPermCont2;
+    private static javax.swing.JSpinner spinnRandCont1;
+    private static javax.swing.JSpinner spinnRandCont2;
+    private static javax.swing.JSpinner spinnRecovVari;
     // End of variables declaration//GEN-END:variables
 
     // set custom model for spinners:
@@ -260,41 +363,41 @@ public class InputCalc extends javax.swing.JDialog {
     private boolean initValues() {
         boolean cond = true;
         // Textfeld auslesen und numerischer Wert prüfen
-        String str1 = jTextField1.getText();
+        String str1 = inputProbab1.getText();
         if (MyUtilities.isNumeric(str1)) {
             Calculation.setProbaTransmition( Float.parseFloat(str1) );
         } else {
             cond = false;
-            jTextField1.setText( "0.015" );
+            inputProbab1.setText( "0.015" );
             MyUtilities.getErrorMsg("Eingabefehler", "Eingabe überprüfen: " + str1);
         }
         // immunes + infected can't exceed population
         int nbInhab = Population.getNbPersons();
-        int nbInf = (int) jSpinner3.getValue();
-        int nbImm = (int) jSpinner8.getValue();
+        int nbInf = (int) spinnInfDay0.getValue();
+        int nbImm = (int) spinnImmDay0.getValue();
         if( (nbInf+nbImm) >= nbInhab ) {
             cond = false;
-            jSpinner8.getModel().setValue(0);
+            spinnImmDay0.getModel().setValue(0);
             MyUtilities.getErrorMsg("Eingabefehler", "Anz. Infizierte + Immune darf Bevölkerungszahl nicht überschreiten");
         }
         
         if( cond ) {
             // Anzahl Zufallskontakte
-            Calculation.setNbRandomContacts( (int) jSpinner1.getValue() );
+            Calculation.setNbRandomContacts((int) spinnRandCont1.getValue() );
             // Anzahl perm. Konzatke
-            Calculation.setNbPermContacts( (int) jSpinner2.getValue() );
+            Calculation.setNbPermContacts((int) spinnPermCont1.getValue() );
             // Anzahl Infizierte am Tag 0
-            Calculation.setNbInfectionStart( (int) jSpinner3.getValue() );
+            Calculation.setNbInfectionStart((int) spinnInfDay0.getValue() );
             // Anzahl Infizierte am Tag 0
-            Calculation.setNbImmunesStart( (int) jSpinner8.getValue() );
+            Calculation.setNbImmunesStart((int) spinnImmDay0.getValue() );
             // Anzahl Tage bis Genesung
-            Calculation.setDaysToRecov( (int) jSpinner4.getValue() );
+            Calculation.setDaysToRecov((int) spinnDaysToRecov.getValue() );
             // Anzahl Infizierte am Tag 0
-            Calculation.setVarRecov( (int) jSpinner5.getValue() );
+            Calculation.setVarRecov((int) spinnRecovVari.getValue() );
             // Anzahl Tages bis Übertragung möglich wird
-            Infection.setDaysToTransmition( (int) jSpinner6.getValue() );
+            Infection.setDaysToTransmition((int) spinnDaysToInf.getValue() );
             // Anzahl Tages bis Übertragung möglich wird
-            Calculation.setMaxCalcDays( (int) jSpinner7.getValue() );
+            Calculation.setMaxCalcDays((int) spinnMaxCalcDays.getValue() );
         }
         
         return cond;
@@ -304,4 +407,11 @@ public class InputCalc extends javax.swing.JDialog {
         return InputCalc.validInput;
     }
     
+    // enable/disable change on day N
+    private static void setContactModifActive( boolean bool ) {
+        spinnRandCont2.setEnabled( bool );
+        spinnPermCont2.setEnabled( bool );
+        inputProbab2.setEnabled( bool );
+        spinnChangeDay.setEnabled( bool );
+    }
 }
