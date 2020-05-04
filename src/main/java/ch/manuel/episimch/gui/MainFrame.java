@@ -273,8 +273,10 @@ public class MainFrame extends javax.swing.JFrame {
         jComboBox1.setSelectedIndex( 1 );
         jComboBox1.setEnabled( false );
         // start simulation
-        t1 = new Thread( DataLoader.calculation );
-        t1.start();
+        if( Population.getNetworkIsCreated() && !t1.isAlive() ) {
+            t1 = new Thread( DataLoader.calculation );
+            t1.start();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed

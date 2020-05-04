@@ -96,10 +96,10 @@ public class PolygonPanel extends JPanel {
                     drawNetwork( g2 );
                     break;
                 case 1:
-                    drawInfections( g2);
+                    drawInfections( g2 );
                     break;
                 case 2:
-                    drawK0( g2);
+                    drawK0( g2 );
                     break;
                 default:
                     drawBorder( g2 );
@@ -287,6 +287,6 @@ public class PolygonPanel extends JPanel {
     
     // vue changed
     public static void vueChanged() {
-        legend.resetMaxVal();
+        //legend.resetMaxVal();
     }
 }

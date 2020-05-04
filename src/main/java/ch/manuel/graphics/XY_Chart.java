@@ -14,7 +14,11 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
+import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
@@ -91,6 +95,7 @@ public class XY_Chart {
         subplot1.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
         
         // create subplot 2...
+        // final XYItemRenderer renderer2 = new XYBarRenderer();
         final XYItemRenderer renderer2 = new StandardXYItemRenderer();
         final NumberAxis rangeAxis2 = new LogarithmicAxis("Daily Cases");
         rangeAxis2.setAutoRangeIncludesZero(false);
@@ -106,7 +111,7 @@ public class XY_Chart {
 
         // parent plot...
         final CombinedDomainXYPlot plot = new CombinedDomainXYPlot(new NumberAxis("Days"));
-        plot.setGap(10.0);
+        plot.setGap(8.0);
 
         // add the subplots...
         plot.add(subplot1, 1);

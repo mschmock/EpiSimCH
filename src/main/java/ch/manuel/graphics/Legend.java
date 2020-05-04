@@ -66,10 +66,10 @@ public class Legend {
         drawSegment( 0, g2 );
         
         // segment 1 to N
-        for( int i = nbSegm; i >= 0; i-- ) {
+        for( int i = nbSegm; i > 0; i-- ) {
             int val = (int) Math.round( Math.pow(10, i) );
             g2.setColor( colorFactory( val ) );
-            drawSegment( (nbSegm-i), g2 ); 
+            drawSegment( (nbSegm-i+1), g2 ); 
             
         }
         
@@ -146,13 +146,21 @@ public class Legend {
             double tmp = val  / this.maxValLegend ; 
             fraction = (float) tmp;
         }
-        return Color.getHSBColor( 1.0f, fraction, 0.65f );
+        
+        if( fraction > 0f ) {
+            float h = fraction > 0.5f ? 0.0f : 0.33f;
+            float s = fraction > 0.5f ? (2f*fraction-1f) : (-2f*fraction+1f);
+            float b = fraction > 0.5f ? (1f*fraction) : (-1f*fraction+1f);
+            return Color.getHSBColor( h, s, b);
+        } else {
+            return Color.getHSBColor( 0.0f, 0.0f, 1.0f);
+        }
     }
     
     // reset max 
-    protected void resetMaxVal() {
-        this.maxValLegend = 0;
-    }
+//    protected void resetMaxVal() {
+//        this.maxValLegend = 0;
+//    }
     
     // getter
     private int getPosX0() {
@@ -165,16 +173,12 @@ public class Legend {
     }
     // setters
     public void setMaxVal( int max ) {
-        if( max > this.maxValLegend ) {
-            this.maxValLegend = roundFunc( max );
-            formatter = new DecimalFormat("###,###");
-        }
+        this.maxValLegend = roundFunc( max );
+        formatter = new DecimalFormat("###,###");
     }
     public void setMaxVal( double max ) {
-        if( max > this.maxValLegend ) {
-            this.maxValLegend = roundFunc( max );
-            formatter = new DecimalFormat("###,##0.00");
-        }
+        this.maxValLegend = roundFunc( max );
+        formatter = new DecimalFormat("###,##0.00");
     }
     public void setLogScale( boolean bool ) {
         this.isLog = bool;
