@@ -362,14 +362,19 @@ public class InputCalc extends javax.swing.JDialog {
     // get values from input-fields
     private boolean initValues() {
         boolean cond = true;
-        // Textfeld auslesen und numerischer Wert prüfen
-        String str1 = inputProbab1.getText();
-        if (MyUtilities.isNumeric(str1)) {
-            Calculation.setProbaTransmition( Float.parseFloat(str1) );
-        } else {
+        // Textfeld1 auslesen und numerischer Wert prüfen
+        String input1 = inputProbab1.getText();
+        if( !MyUtilities.isNumeric(input1) ) {
             cond = false;
             inputProbab1.setText( "0.015" );
-            MyUtilities.getErrorMsg("Eingabefehler", "Eingabe überprüfen: " + str1);
+            MyUtilities.getErrorMsg("Eingabefehler", "Eingabe überprüfen: " + input1);
+        }
+        // Textfeld2 auslesen und numerischer Wert prüfen
+        String input2 = inputProbab2.getText();
+        if( !MyUtilities.isNumeric(input2)) {
+            cond = false;
+            inputProbab1.setText( "0.015" );
+            MyUtilities.getErrorMsg("Eingabefehler", "Eingabe überprüfen: " + input2);
         }
         // immunes + infected can't exceed population
         int nbInhab = Population.getNbPersons();
@@ -382,10 +387,22 @@ public class InputCalc extends javax.swing.JDialog {
         }
         
         if( cond ) {
+            // Tag mit Wechsel von Zustand 1 -> 2
+            if( jCheckBox1.isSelected() ) {
+                Calculation.setDayChange( (int) spinnChangeDay.getValue() );
+            } else {
+                // never change (day -1 will never be reached)
+                Calculation.setDayChange( -1 );
+            }
             // Anzahl Zufallskontakte
-            Calculation.setNbRandomContacts((int) spinnRandCont1.getValue() );
+            Calculation.setNbRandomContacts( 0, (int) spinnRandCont1.getValue() );
+            Calculation.setNbRandomContacts( 1, (int) spinnRandCont2.getValue() );
             // Anzahl perm. Konzatke
-            Calculation.setNbPermContacts((int) spinnPermCont1.getValue() );
+            Calculation.setNbPermContacts( 0, (int) spinnPermCont1.getValue() );
+            Calculation.setNbPermContacts( 1, (int) spinnPermCont1.getValue() );
+            // Wahrscheinlichkeit Übertragung
+            Calculation.setProbaTransmition( 0, Float.parseFloat(input1) );
+            Calculation.setProbaTransmition( 1, Float.parseFloat(input2) );
             // Anzahl Infizierte am Tag 0
             Calculation.setNbInfectionStart((int) spinnInfDay0.getValue() );
             // Anzahl Infizierte am Tag 0

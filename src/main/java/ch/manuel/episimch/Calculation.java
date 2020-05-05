@@ -20,12 +20,20 @@ import java.util.Random;
 
 public class Calculation implements Runnable {
     
-    // membervariables
+    // MEMBERVARIABLES
+    // start
     private static int nbInfectionsStart;       // Anzahl Infizierte beim Start, Tag 0
     private static int nbImmunesStart;          // Anzahl Immune beim Start, Tag 0
-    private static int randContPerDay;          // Anzahl Zufallskontakte pro Tag
-    private static int permContPerDay;          // Anzahl Kontakte aus Netzwerk pro Tag
-    private static float probaTransmition;      // Wahrscheinlichkeit für Übertragung
+    // contact - transmition
+    private static int randContPerDay;              // (1) Anzahl Zufallskontakte pro Tag
+    private static int permContPerDay;              // (2) Anzahl Kontakte aus Netzwerk pro Tag
+    private static float probaTransmition;          // (3) Wahrscheinlichkeit für Übertragung
+    private static int[] randContPerDayArr;         // Container für Werte (1), Wechsel -> daysOfChange
+    private static int[] permContPerDayArr;         // Container für Werte (2), Wechsel -> daysOfChange
+    private static float[] probaTransmitionArr;     // Container für Werte (3), Wechsel -> daysOfChange
+    private static int daysOfChange;                // Tag für Wechsel von Abschnitt 1 zu Abschnitt 2 (index)
+    private static final int LIMIT_OF_ELEMENTS = 2;
+    // recovery
     private static int dayToRecovery;           // Anzahl Tage bis zu Genesung
     private static int varRecovery;             // Variabilität Genesung in Tage
     
@@ -45,6 +53,11 @@ public class Calculation implements Runnable {
     // Constructor
     public Calculation() {
         Calculation.day = 0;
+        
+        // arrays (actual limit: 2 elements)
+        randContPerDayArr = new int[LIMIT_OF_ELEMENTS];
+        permContPerDayArr = new int[LIMIT_OF_ELEMENTS];
+        probaTransmitionArr = new float[LIMIT_OF_ELEMENTS];
     }
     
     
@@ -111,6 +124,8 @@ public class Calculation implements Runnable {
         }
         // set size of array for results
         Infection.initArray( Calculation.maxDays );
+        // set contacts for day 0
+        initDailyContacts();
     }
     // prepare start calculation
     private static void initInfections() {
@@ -193,6 +208,9 @@ public class Calculation implements Runnable {
     
     // calculate contacts
     private static void calcContacts() {
+        // set current contact values (daily contacts)
+        updateDailyContactData();
+        
         int nb = Population.getNbPersons();
         Random randTrans = new Random();
         Random randCont = new Random();
@@ -395,6 +413,20 @@ public class Calculation implements Runnable {
         
     }
     
+    // update daily contact data
+    private static void updateDailyContactData() {
+        if( Calculation.day == Calculation.daysOfChange ) {
+            Calculation.permContPerDay = Calculation.permContPerDayArr[1];
+            Calculation.randContPerDay = Calculation.randContPerDayArr[1];
+            Calculation.probaTransmition = Calculation.probaTransmitionArr[1];
+        }
+    }
+    private static void initDailyContacts() {
+        Calculation.permContPerDay = Calculation.permContPerDayArr[0];
+        Calculation.randContPerDay = Calculation.randContPerDayArr[0];
+        Calculation.probaTransmition = Calculation.probaTransmitionArr[0];
+    }
+    
     // reset calculation
     public static void resetCalc() {
         Calculation.day = 0;
@@ -412,14 +444,29 @@ public class Calculation implements Runnable {
     public static void setNbImmunesStart(int nb) {
         Calculation.nbImmunesStart = nb;
     }
-    public static void setNbRandomContacts(int nb) {
-        Calculation.randContPerDay = nb;
+    public static void setNbRandomContacts(int index, int nb) {
+        if( index <= LIMIT_OF_ELEMENTS ) {
+            if( index > 0 ) {
+                Calculation.randContPerDayArr[index] = nb;
+            }
+        }
     }
-    public static void setNbPermContacts(int nb) {
-        Calculation.permContPerDay = nb;
+    public static void setNbPermContacts(int index, int nb) {
+        if( index <= LIMIT_OF_ELEMENTS ) {
+            if( index > 0 ) {
+                Calculation.permContPerDayArr[index] = nb;
+            }
+        }
     }
-    public static void setProbaTransmition(float probab) {
-        Calculation.probaTransmition = probab;
+    public static void setProbaTransmition(int index, float probab) {
+        if( index <= LIMIT_OF_ELEMENTS ) {
+            if( index > 0 ) {
+                Calculation.probaTransmitionArr[index] = probab;
+            }
+        }
+    }
+    public static void setDayChange(int day) {
+        Calculation.daysOfChange = day;
     }
     public static void setDaysToRecov(int recov) {
         Calculation.dayToRecovery = recov;
