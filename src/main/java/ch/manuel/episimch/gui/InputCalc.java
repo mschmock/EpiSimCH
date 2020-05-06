@@ -373,7 +373,7 @@ public class InputCalc extends javax.swing.JDialog {
         String input2 = inputProbab2.getText();
         if( !MyUtilities.isNumeric(input2)) {
             cond = false;
-            inputProbab1.setText( "0.015" );
+            inputProbab2.setText( "0.015" );
             MyUtilities.getErrorMsg("Eingabefehler", "Eingabe überprüfen: " + input2);
         }
         // immunes + infected can't exceed population
@@ -399,7 +399,7 @@ public class InputCalc extends javax.swing.JDialog {
             Calculation.setNbRandomContacts( 1, (int) spinnRandCont2.getValue() );
             // Anzahl perm. Konzatke
             Calculation.setNbPermContacts( 0, (int) spinnPermCont1.getValue() );
-            Calculation.setNbPermContacts( 1, (int) spinnPermCont1.getValue() );
+            Calculation.setNbPermContacts( 1, (int) spinnPermCont2.getValue() );
             // Wahrscheinlichkeit Übertragung
             Calculation.setProbaTransmition( 0, Float.parseFloat(input1) );
             Calculation.setProbaTransmition( 1, Float.parseFloat(input2) );

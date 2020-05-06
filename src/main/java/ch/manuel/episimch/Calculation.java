@@ -95,7 +95,7 @@ public class Calculation implements Runnable {
                 MainFrame.repaintCustomPanel();
                 // next day
                 day++;
-                
+
                 // check exit
                 if( day >= maxDays ) { exit = true; }
             }
@@ -445,22 +445,22 @@ public class Calculation implements Runnable {
         Calculation.nbImmunesStart = nb;
     }
     public static void setNbRandomContacts(int index, int nb) {
-        if( index <= LIMIT_OF_ELEMENTS ) {
-            if( index > 0 ) {
+        if( index < LIMIT_OF_ELEMENTS ) {
+            if( index >= 0 ) {
                 Calculation.randContPerDayArr[index] = nb;
             }
         }
     }
     public static void setNbPermContacts(int index, int nb) {
-        if( index <= LIMIT_OF_ELEMENTS ) {
-            if( index > 0 ) {
+        if( index < LIMIT_OF_ELEMENTS ) {
+            if( index >= 0 ) {
                 Calculation.permContPerDayArr[index] = nb;
             }
         }
     }
     public static void setProbaTransmition(int index, float probab) {
-        if( index <= LIMIT_OF_ELEMENTS ) {
-            if( index > 0 ) {
+        if( index < LIMIT_OF_ELEMENTS ) {
+            if( index >= 0 ) {
                 Calculation.probaTransmitionArr[index] = probab;
             }
         }
