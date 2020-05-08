@@ -16,11 +16,20 @@ import ch.manuel.utilities.MyUtilities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Calculation implements Runnable {
     
     // MEMBERVARIABLES
+    // thread control
+    private static int nbProcessors;
+    private static int nbThreads;
+    private static Thread thread1;
+    private static Thread thread2;
+    private static Thread thread3;
+    private static Thread thread4;
     // start
     private static int nbInfectionsStart;       // Anzahl Infizierte beim Start, Tag 0
     private static int nbImmunesStart;          // Anzahl Immune beim Start, Tag 0
@@ -58,6 +67,10 @@ public class Calculation implements Runnable {
         randContPerDayArr = new int[LIMIT_OF_ELEMENTS];
         permContPerDayArr = new int[LIMIT_OF_ELEMENTS];
         probaTransmitionArr = new float[LIMIT_OF_ELEMENTS];
+        
+        // nb processors
+        nbProcessors = Runtime.getRuntime().availableProcessors();
+        nbThreads = Calculation.nbProcessors > 4 ? 4 : Calculation.nbProcessors;
     }
     
     
@@ -84,7 +97,7 @@ public class Calculation implements Runnable {
                 MainFrame.setStatusText("Calculation: Day " + day + ", Nb of infections: " + sumInfections +
                                         ", mean R0: " + MyUtilities.getStringFromDbl( Infection.getMeanR0() ));
                 // calculate contacts
-                Calculation.calcContacts();
+                Calculation.contactLooper();
                 // update infections
                 Calculation.updateInfections();
                 // update data for population
@@ -99,9 +112,7 @@ public class Calculation implements Runnable {
                 // check exit
                 if( day >= maxDays ) { exit = true; }
             }
-        }
-        
-        
+        }  
     }
     
     // FUNCTIONS
@@ -206,67 +217,45 @@ public class Calculation implements Runnable {
         }
     }
     
-    // calculate contacts
-    private static void calcContacts() {
+    // loop through contacts
+    private static void contactLooper() {
         // set current contact values (daily contacts)
         updateDailyContactData();
         
-        int nb = Population.getNbPersons();
-        Random randTrans = new Random();
-        Random randCont = new Random();
+        Contact_Looper.setDay(day);
+        Contact_Looper.setPermContPerDay( Calculation.permContPerDay );
+        Contact_Looper.setRandContPerDay( Calculation.randContPerDay );
+        Contact_Looper.setProbaTransmition( Calculation.probaTransmition );
         
-        // iterate through population
-        for (int i = 0; i < nb; i++) {
-            // actual Person to test
-            Person actPers = Population.getPerson(i);
-
-            // check persons who can transmit a infection (isInfectious)
-            if( actPers.getInfection().isInfectious( day )) {
-                
-                // 1. PERMANENT CONTACTS
-                // array contacts per person
-                int[] arrContacts = actPers.getListNetwork().stream().mapToInt(Integer::intValue).toArray();
-                // itaration through contacts
-                for( int j = 0; j < Calculation.permContPerDay; j++ ) { 
-                    int tmpInd = randCont.nextInt( arrContacts.length );
-                    // temp. Person
-                    Person tmpPers = Population.getPerson( arrContacts[tmpInd] );
-                    
-                    // transmition of infection
-                    if( randTrans.nextFloat() < Calculation.probaTransmition ) {
-                        // infection is transmitted --> return true
-                        if( tmpPers.getInfection().setIsInfected( day ) ) {
-                            // add new infection to counter R0
-                            actPers.getInfection().transmitionSuccessful();
-                        }
-                    }
-                }
-                
-                // 2. RANDOM CONTACTS
-                for( int j = 0; j < Calculation.randContPerDay; j++ ) {
-                    int tmpInd = randCont.nextInt( nb );
-                    // no reference to itself: nb != tmpInd
-                    // goto next referenc (exept last element)
-                    if( i == tmpInd ) {
-                        if( i == (nb-1) ) {
-                            tmpInd = 0;
-                        } else {
-                            tmpInd = i+1;
-                        }
-                    }
-                    // temp. Person
-                    Person tmpPers = Population.getPerson( tmpInd );
-                    
-                    // transmition of infection
-                    if( randTrans.nextFloat() < Calculation.probaTransmition ) {
-                        // infection is transmitted --> return true
-                        if( tmpPers.getInfection().setIsInfected( day ) ) {
-                            // add new infection to counter R0
-                            actPers.getInfection().transmitionSuccessful();
-                        }
-                    }
-                }
-            }
+        // create up to 4 threads
+        switch ( nbThreads ) {
+            case 4:
+                Contact_Looper looper4 = new Contact_Looper( 4 , 4 );
+                thread4 = new Thread( looper4 );
+                thread4.start();
+            case 3:
+                Contact_Looper looper3 = new Contact_Looper( 3 , nbThreads );
+                thread3 = new Thread( looper3 );
+                thread3.start();
+            case 2:
+                Contact_Looper looper2 = new Contact_Looper( 2 , nbThreads );
+                thread2 = new Thread( looper2 );
+                thread2.start();
+            default:
+                Contact_Looper looper1 = new Contact_Looper( 1 , nbThreads );
+                thread1 = new Thread( looper1 );
+                thread1.start();
+        }
+        
+        // join threads
+        try {
+            if( thread1 != null ) { thread1.join(); }
+            if( thread2 != null ) { thread2.join();}
+            if( thread3 != null ) { thread3.join();}
+            if( thread4 != null ) { thread4.join();}
+            
+        } catch (InterruptedException ex) {
+            System.out.print("Fehler mit threads");
         }
     }
     

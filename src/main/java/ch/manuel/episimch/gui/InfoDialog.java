@@ -1,8 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Autor: Manuel Schmocker
+//Datum: 07.05.2020
+
 package ch.manuel.episimch.gui;
 
 // Info-Panel during startup process
@@ -24,8 +22,10 @@ public class InfoDialog extends javax.swing.JDialog implements Runnable {
         initComponents();
         // inital text:
         long maxMem = Runtime.getRuntime().maxMemory() / (1024*1024);
+        int nbProcessors = Runtime.getRuntime().availableProcessors();
         jTextArea1.setText( "Starting EpiSimCH...\n" +
-                            "Available heap size: " + maxMem + " MB\n");
+                            "Available heap size: " + maxMem + " MB\n" +
+                            "Available processors: " + nbProcessors + "\n");
         // OK button not clickable
         jButton2.setEnabled(false);
         // startup ok
