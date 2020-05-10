@@ -1,7 +1,7 @@
 //Autor: Manuel Schmocker
 //Datum: 12.04.2020
 
-package ch.manuel.graphics;
+package ch.manuel.episimch.graphics;
 
 
 import java.awt.Color;

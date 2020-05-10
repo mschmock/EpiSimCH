@@ -1,7 +1,7 @@
 //Autor: Manuel Schmocker
 //Datum: 13.04.2020
 
-package ch.manuel.graphics;
+package ch.manuel.episimch.graphics;
 
 import java.awt.BorderLayout;
 

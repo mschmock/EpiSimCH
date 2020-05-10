@@ -2,7 +2,7 @@
 //Datum: 02.05.2020
 
 
-package ch.manuel.graphics;
+package ch.manuel.episimch.graphics;
 
 // Legend in main plot (Class PolygonPanel.java)
 

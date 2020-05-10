@@ -397,7 +397,7 @@ public class InputCalc extends javax.swing.JDialog {
             // Anzahl Zufallskontakte
             Calculation.setNbRandomContacts( 0, (int) spinnRandCont1.getValue() );
             Calculation.setNbRandomContacts( 1, (int) spinnRandCont2.getValue() );
-            // Anzahl perm. Konzatke
+            // Anzahl perm. Kontakte
             Calculation.setNbPermContacts( 0, (int) spinnPermCont1.getValue() );
             Calculation.setNbPermContacts( 1, (int) spinnPermCont2.getValue() );
             // Wahrscheinlichkeit Übertragung

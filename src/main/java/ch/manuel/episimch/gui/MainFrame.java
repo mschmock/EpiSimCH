@@ -6,10 +6,11 @@ package ch.manuel.episimch.gui;
 import ch.manuel.episimch.Calculation;
 import ch.manuel.episimch.DataLoader;
 import ch.manuel.episimch.Startup;
-import ch.manuel.graphics.ChartFrame;
-import ch.manuel.graphics.PolygonPanel;
-import ch.manuel.graphics.XY_Chart;
+import ch.manuel.episimch.graphics.ChartFrame;
+import ch.manuel.episimch.graphics.PolygonPanel;
+import ch.manuel.episimch.graphics.XY_Chart;
 import ch.manuel.population.Population;
+import ch.manuel.utilities.CSVwriter;
 import ch.manuel.utilities.MyUtilities;
 import java.awt.Point;
 
@@ -65,7 +66,7 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        customPanel = new PolygonPanel();
+        customPanel = new ch.manuel.episimch.graphics.PolygonPanel();
         jButton1 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -84,6 +85,8 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jMenu4 = new javax.swing.JMenu();
+        jMenuItem9 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(400, 300));
@@ -221,6 +224,18 @@ public class MainFrame extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu3);
 
+        jMenu4.setText("Export CSV");
+
+        jMenuItem9.setText("Save as CSV");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem9);
+
+        jMenuBar1.add(jMenu4);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -292,7 +307,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // element selected in menu
-        PolygonPanel.vueChanged();
+        PolygonPanel.viewChanged();
         MainFrame.selectedIndex = jComboBox1.getSelectedIndex();
         MainFrame.customPanel.repaintPanel();
     }//GEN-LAST:event_jComboBox1ActionPerformed
@@ -326,7 +341,7 @@ public class MainFrame extends javax.swing.JFrame {
             Calculation.resetCalc();
             Population.resetInfection();
             XY_Chart.resetChart();
-            PolygonPanel.vueChanged();
+            PolygonPanel.viewChanged();
         }
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
@@ -348,13 +363,18 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // absolute results if NOT selected
-        PolygonPanel.vueChanged();
+        PolygonPanel.viewChanged();
         PolygonPanel.setAbsoluteResultats( !jCheckBox1.isSelected() );
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        // save results to csv-file
+        CSVwriter.saveResults();
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private static ch.manuel.graphics.PolygonPanel customPanel;
+    private static ch.manuel.episimch.graphics.PolygonPanel customPanel;
     private static javax.swing.JButton jButton1;
     private static javax.swing.JButton jButton2;
     private static javax.swing.JCheckBox jCheckBox1;
@@ -363,15 +383,17 @@ public class MainFrame extends javax.swing.JFrame {
     private static javax.swing.JMenu jMenu1;
     private static javax.swing.JMenu jMenu2;
     private static javax.swing.JMenu jMenu3;
+    private static javax.swing.JMenu jMenu4;
     private static javax.swing.JMenuBar jMenuBar1;
     private static javax.swing.JMenuItem jMenuItem1;
     private static javax.swing.JMenuItem jMenuItem2;
     private static javax.swing.JMenuItem jMenuItem3;
     private static javax.swing.JMenuItem jMenuItem4;
     private static javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
-    private javax.swing.JMenuItem jMenuItem8;
+    private static javax.swing.JMenuItem jMenuItem6;
+    private static javax.swing.JMenuItem jMenuItem7;
+    private static javax.swing.JMenuItem jMenuItem8;
+    private static javax.swing.JMenuItem jMenuItem9;
     private static javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

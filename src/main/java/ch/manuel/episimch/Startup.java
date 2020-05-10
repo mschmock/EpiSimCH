@@ -101,7 +101,8 @@ public class Startup extends Thread {
         }
     }
     
-    // Try restart
+    // Try restart java application
+    // with paramter "-Xmx8g" (8GB heap size)
     private static void restartApplication() throws URISyntaxException, IOException {
         final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
         final File currentJar = new File(Startup.class.getProtectionDomain().getCodeSource().getLocation().toURI() );

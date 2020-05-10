@@ -7,17 +7,16 @@ package ch.manuel.episimch;
 
 import ch.manuel.geodata.Municipality;
 import ch.manuel.episimch.gui.InputCalc;
-import ch.manuel.graphics.XY_Chart;
+import ch.manuel.episimch.graphics.XY_Chart;
 import ch.manuel.episimch.gui.MainFrame;
 import ch.manuel.population.Infection;
 import ch.manuel.population.Person;
 import ch.manuel.population.Population;
+import ch.manuel.utilities.CSVwriter;
 import ch.manuel.utilities.MyUtilities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class Calculation implements Runnable {
@@ -217,7 +216,7 @@ public class Calculation implements Runnable {
         }
     }
     
-    // loop through contacts
+    // loop through contacts 
     private static void contactLooper() {
         // set current contact values (daily contacts)
         updateDailyContactData();
@@ -255,7 +254,7 @@ public class Calculation implements Runnable {
             if( thread4 != null ) { thread4.join();}
             
         } catch (InterruptedException ex) {
-            System.out.print("Fehler mit threads");
+            System.err.print("Fehler mit threads");
         }
     }
     
@@ -373,6 +372,7 @@ public class Calculation implements Runnable {
     }
     
     // update chart
+    // add data to XY_Chart
     private static void updateChart() {
         int d = Calculation.day;
 
@@ -399,6 +399,9 @@ public class Calculation implements Runnable {
         XY_Chart.addR0(d, x31);
         XY_Chart.add7DayR0(d, x32);
         XY_Chart.addIncrRate(d, x33);
+        
+        // write result
+        CSVwriter.addResult(d + ";" + x11 + ";" + x12 + ";" + x13 + ";" + x21 + ";" + x22 + ";" + x31 + ";" + x32 + ";" + x33);
         
     }
     
@@ -467,4 +470,29 @@ public class Calculation implements Runnable {
         Calculation.maxDays = days;
     }
     
+    // getter
+    public static int getNbInfectionStart() {
+        return Calculation.nbInfectionsStart;
+    }
+    public static int getNbImmunesStart() {
+        return Calculation.nbImmunesStart;
+    }
+    public static int getDayChange() {
+        return Calculation.daysOfChange;
+    }
+    public static int[] getNbRandomContacts() {
+        return Calculation.randContPerDayArr;
+    }
+    public static int[] getNbPermContacts() {
+        return Calculation.permContPerDayArr;
+    }
+    public static float[] getProbaTransmition() {
+        return Calculation.probaTransmitionArr;
+    }
+    public static int getDaysToRecov() {
+        return Calculation.dayToRecovery;
+    }
+    public static int getVarRecov() {
+        return Calculation.varRecovery;
+    }
 }

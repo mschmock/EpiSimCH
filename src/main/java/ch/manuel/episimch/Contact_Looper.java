@@ -34,6 +34,7 @@ public class Contact_Looper implements Runnable {
         randCont = new Random();
         
         nbThread = nb;
+        Thread.currentThread().setName("Looper"+nbThread);
         nbStart = (int) Math.floor( (double) (nb-1)/max* nbPop );
         nbEnd = (int) Math.floor( (double) nb/max* nbPop );
         //System.out.println("s: " + nbStart + ", e: " + nbEnd);

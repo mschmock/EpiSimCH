@@ -1,7 +1,7 @@
 //Autor: Manuel Schmocker
 //Datum: 02.04.2020
 
-package ch.manuel.graphics;
+package ch.manuel.episimch.graphics;
 
 import ch.manuel.episimch.gui.MainFrame;
 import ch.manuel.episimch.DataLoader;
@@ -286,7 +286,7 @@ public class PolygonPanel extends JPanel {
     }
     
     // vue changed
-    public static void vueChanged() {
+    public static void viewChanged() {
         //legend.resetMaxVal();
     }
 }
