@@ -96,6 +96,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuItem9 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("EpiSimCH v1.0");
         setMinimumSize(new java.awt.Dimension(400, 300));
 
         customPanel.setBackground(new java.awt.Color(204, 204, 204));
@@ -184,7 +185,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu2.setText("Edit");
         jMenu2.setPreferredSize(new java.awt.Dimension(50, 21));
 
-        jMenuItem3.setText("Soz. Netzwerk");
+        jMenuItem3.setText("Soc. Network");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem3ActionPerformed(evt);
@@ -200,7 +201,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem1);
 
-        jMenuItem4.setText("Sterblichkeit");
+        jMenuItem4.setText("Mortality");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
