@@ -18,7 +18,7 @@ public class Startup extends Thread {
     private static MainFrame mainFrame;
     public static InfoDialog dialog;
     private static DataLoader dataLoader;
-    private static Thread t2;                   // loading from file thread
+    
     
     public static void main(String[] args) {
         
@@ -61,12 +61,6 @@ public class Startup extends Thread {
                 }
             });
         }
-    }
-    
-    // start file loading thread
-    public static void loadFile() {
-        t2 = new Thread( Startup.dataLoader );
-        t2.start();
     }
     
     // Check available memory of heap

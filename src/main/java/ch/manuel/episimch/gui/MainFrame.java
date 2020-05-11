@@ -5,6 +5,7 @@ package ch.manuel.episimch.gui;
 
 import ch.manuel.episimch.Calculation;
 import ch.manuel.episimch.DataLoader;
+import ch.manuel.episimch.SaveAndLoad;
 import ch.manuel.episimch.Startup;
 import ch.manuel.episimch.graphics.ChartFrame;
 import ch.manuel.episimch.graphics.PolygonPanel;
@@ -23,8 +24,11 @@ public class MainFrame extends javax.swing.JFrame {
     public static InputMortality dialog3;
     public static ChartFrame chartframe;
     private static int selectedIndex;
+    // load and save
+    private static SaveAndLoad saveAndLoad;
     // calculation
-    private Thread t1;      // calculation thread
+    private static Thread t1;                   // calculation thread
+    private static Thread t2;                   // loading/saving from file thread
     
     // Constructor
     public MainFrame() {
@@ -41,6 +45,9 @@ public class MainFrame extends javax.swing.JFrame {
                 chartframe = new ChartFrame();
             }
         });
+        
+        // save and load object
+        saveAndLoad = new SaveAndLoad();
     }
     
     // PUBLIC FUNCTIONS
@@ -350,15 +357,21 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        // save population & geodata
-        DataLoader.saveNetwork();
+        // set text in MainFrame
+        MainFrame.setStatusText("Save file, please wait...");
+        // save network
+        SaveAndLoad.selectSaving();
+        t2 = new Thread( saveAndLoad );
+        t2.start();
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
         // set text in MainFrame
         MainFrame.setStatusText("Loading file, please wait...");
-        // load population & geodata
-        Startup.loadFile();
+        // load network
+        SaveAndLoad.selectLoading();
+        t2 = new Thread( saveAndLoad );
+        t2.start();
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed

@@ -69,9 +69,11 @@ public class Legend {
         for( int i = nbSegm; i > 0; i-- ) {
             int val = (int) Math.round( Math.pow(10, i) );
             g2.setColor( colorFactory( val ) );
-            drawSegment( (nbSegm-i+1), g2 ); 
-            
+            drawSegment( (nbSegm-i+1), g2 );
         }
+        // last segment (value 1)
+        g2.setColor( colorFactory( 1 ) );
+        drawSegment( nbSegm+1, g2 );
         
         // TEXT LEGEND
         g2.setColor( Color.black );
@@ -84,6 +86,9 @@ public class Legend {
             label = String.valueOf( formatter.format( val ) );
             drawAnnotation( label, (nbSegm-i), g2 );
         }
+        // text for value 1
+        label = String.valueOf( formatter.format( 1.0 ) );
+        drawAnnotation( label, nbSegm, g2 );
     }
     
     // legend: draw segment nb
@@ -141,7 +146,7 @@ public class Legend {
     public Color colorFactory( double val ) {
         float fraction;
         if( this.isLog ) {
-            fraction = (float) (Math.log( val ) / Math.log( this.maxValLegend ) );
+            fraction = (float) (Math.log( val+0.01 ) / Math.log( this.maxValLegend ) );
         } else {
             double tmp = val  / this.maxValLegend ; 
             fraction = (float) tmp;
