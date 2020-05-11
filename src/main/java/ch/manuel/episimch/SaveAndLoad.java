@@ -19,7 +19,6 @@ public class SaveAndLoad implements Runnable {
 
     private static boolean selectLoading;
     
-    
     @Override
     public void run() {
         // save or load?
