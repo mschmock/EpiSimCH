@@ -15,12 +15,17 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 // Class: Load geodatas from resources
-public class DataLoader implements Runnable {
+public class DataLoader {
     
     // Membervariablen
     public static GeoData geoData;
@@ -30,10 +35,13 @@ public class DataLoader implements Runnable {
     private static final Charset utf8 = StandardCharsets.UTF_8;
     
     // files in resources
+    private static final String dataXML = "/data/appData.xml";
     private static final String geoDataJSON = "/data/geodata.json";
-    //private static final String geoDataJSON = "/data/geodata_10.json";
     private static final String populationJSON = "/data/population.json";
     private static final String ageJSON = "/data/age.json";
+    
+    // xml
+    private static Document appDataXML;
     
     //Konstruktor
     public DataLoader() {
@@ -44,14 +52,13 @@ public class DataLoader implements Runnable {
         
         DataLoader.loadOK = false;
     }
-    
-    @Override
-    public void run() {
-        
-    }
+
     
     public void loadData() {
         boolean loadingOK = false;
+        
+        // load xml
+        loadXML();
         
         // load JSON from resouces
         // file 1
@@ -97,7 +104,42 @@ public class DataLoader implements Runnable {
             DataLoader.loadOK = false;
         }
     }
+    
+    // load xml
+    private boolean loadXML() {
+        boolean hasErr = false;
+        String errMsg = "All OK";
+        
+        try {
+            // get File: appData.xml
+            InputStream in = getClass().getResourceAsStream( dataXML );
 
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+                                
+            DataLoader.appDataXML = db.parse( in );
+            DataLoader.appDataXML.normalizeDocument();
+
+        } catch (ParserConfigurationException ex) {
+            hasErr = true;
+            errMsg = "Error loading xml: " + ex.getMessage();
+        } catch (SAXException ex) {
+            hasErr = true;
+            errMsg = "Error loading xml: " + ex.getMessage();
+        } catch (IOException ex) {
+           hasErr = true;
+            errMsg = "Error loading xml: " + ex.getMessage();
+        }
+        // print error-message
+        if( hasErr ) {
+            MyUtilities.getErrorMsg("Error", errMsg);
+            return false;
+        } else {
+            // no errors loading data
+            return true;
+        }
+    }
+    
     // load JSON: geodata (Grenzen)
     private boolean loadJSON() {
 
@@ -383,10 +425,13 @@ public class DataLoader implements Runnable {
     public static boolean isLoadingOK() {
         return DataLoader.loadOK;
     }
-    
+    public static String getXMLdata(String tagName) {
+        return DataLoader.appDataXML.getElementsByTagName(tagName).item(0).getTextContent();
+    } 
     
     // set status text in Dialog
     void setStatusText() {
+        Startup.dialog.addText( "Application Version: " + DataLoader.getXMLdata( "version" ) + "\n");
         Startup.dialog.addText( "Loaded Municipalities: " + GeoData.getNbMunicip() + "\n");
         Startup.dialog.addText( "Bounds xMin " + geoData.getBoundX() + 
                                         ", yMin " + geoData.getBoundY() + "\n");

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Save basic datas for the application
+-->
+
+
+<root>
+    <version>1.02</version>
+    <date>16.05.2020</date>
+    <author>Manuel Schmocker</author>
+    <e-mail>manuel.schmocker@gmail.com</e-mail>
+</root>

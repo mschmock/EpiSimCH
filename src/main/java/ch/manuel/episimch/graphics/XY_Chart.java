@@ -98,14 +98,14 @@ public class XY_Chart {
         // final XYItemRenderer renderer2 = new XYBarRenderer();
         final XYItemRenderer renderer2 = new StandardXYItemRenderer();
         final NumberAxis rangeAxis2 = new LogarithmicAxis("Daily Cases");
-        rangeAxis2.setAutoRangeIncludesZero(false);
+        rangeAxis2.setAutoRangeIncludesZero(true);
         subplot2 = new XYPlot(dataset2, null, rangeAxis2, renderer2);
         subplot2.setRangeAxisLocation(AxisLocation.TOP_OR_LEFT);
         
         // create subplot 3...
         final XYItemRenderer renderer3 = new StandardXYItemRenderer();
-        final NumberAxis rangeAxis3 = new NumberAxis("K0 / Incr. Rate");
-        rangeAxis3.setAutoRangeIncludesZero(false);
+        final NumberAxis rangeAxis3 = new NumberAxis("R0 / Incr. Rate");
+        rangeAxis3.setAutoRangeIncludesZero(true);
         final XYPlot subplot3 = new XYPlot(dataset3, null, rangeAxis3, renderer3);
         subplot3.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
 

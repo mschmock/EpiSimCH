@@ -23,6 +23,7 @@ public class MainFrame extends javax.swing.JFrame {
     public static InputNetwork dialog2;
     public static InputMortality dialog3;
     public static ChartFrame chartframe;
+    public static About aboutFrame;
     private static int selectedIndex;
     // load and save
     private static SaveAndLoad saveAndLoad;
@@ -43,6 +44,7 @@ public class MainFrame extends javax.swing.JFrame {
                 dialog2 = new InputNetwork(new javax.swing.JFrame(), true);
                 dialog3 = new InputMortality(new javax.swing.JFrame(), true);
                 chartframe = new ChartFrame();
+                aboutFrame = new About();
             }
         });
         
@@ -94,6 +96,8 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem9 = new javax.swing.JMenuItem();
+        jMenu5 = new javax.swing.JMenu();
+        jMenuItem10 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("EpiSimCH v1.0");
@@ -244,6 +248,18 @@ public class MainFrame extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu4);
 
+        jMenu5.setText("About");
+
+        jMenuItem10.setText("Info");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem10);
+
+        jMenuBar1.add(jMenu5);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -386,6 +402,11 @@ public class MainFrame extends javax.swing.JFrame {
         CSVwriter.saveResults();
     }//GEN-LAST:event_jMenuItem9ActionPerformed
 
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        // oben about-frame
+        aboutFrame.setVisible( true );
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private static ch.manuel.episimch.graphics.PolygonPanel customPanel;
@@ -398,8 +419,10 @@ public class MainFrame extends javax.swing.JFrame {
     private static javax.swing.JMenu jMenu2;
     private static javax.swing.JMenu jMenu3;
     private static javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
     private static javax.swing.JMenuBar jMenuBar1;
     private static javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
     private static javax.swing.JMenuItem jMenuItem2;
     private static javax.swing.JMenuItem jMenuItem3;
     private static javax.swing.JMenuItem jMenuItem4;
